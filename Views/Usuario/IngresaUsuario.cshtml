@@ -1,0 +1,83 @@
+﻿@model CoreCRUDwithORACLE.Models.UsuarioViewModel
+
+@{
+    ViewData["Title"] = "IngresaUsuario";
+}
+
+<h1>Nuevo usuario</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="IngresaUsuario">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PROVINCIA"></label>
+                <select asp-for="codProvincia"
+                        class="form-control"
+                        asp-items="@(new SelectList(Model.provincias,"Value", "Text"))">
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LOGEO" class="control-label"></label>
+                <input asp-for="LOGEO" class="form-control" />
+                <span asp-validation-for="LOGEO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CEDULAC" class="control-label"></label>
+                <input asp-for="CEDULAC" class="form-control" />
+                <span asp-validation-for="CEDULAC" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="DIGITO" class="control-label"></label>
+                <input asp-for="DIGITO" class="form-control" />
+                <span asp-validation-for="DIGITO" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="CLAVE" class="control-label"></label>
+                <input asp-for="CLAVE" class="form-control" />
+                <span asp-validation-for="CLAVE" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NOMBRE" class="control-label"></label>
+                <input asp-for="NOMBRE" class="form-control" />
+                <span asp-validation-for="NOMBRE" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+            <label asp-for="ROL" class="control-label"></label>
+            <input asp-for="ROL" class="form-control" />
+            <span asp-validation-for="ROL" class="text-danger"></span>
+        </div>*@
+            <div class="form-group">
+                <label asp-for="ROL"></label>
+                <select asp-for="codRol"
+                        class="form-control"
+                        asp-items="@(new SelectList(Model.roles,"Value", "Text"))">
+                </select>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="ESTADO" class="control-label"></label>
+                <input asp-for="ESTADO" class="form-control" />
+                <span asp-validation-for="ESTADO" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="MAIL" class="control-label"></label>
+                <input asp-for="MAIL" class="form-control" />
+                <span asp-validation-for="MAIL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Regresar al listado | </a>
+    <a asp-controller="Home" asp-action="Index">Regresar al Inicio | </a>
+    <a asp-controller="Account" asp-action="Login">Salir</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

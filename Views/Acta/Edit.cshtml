@@ -1,0 +1,60 @@
+﻿@model CoreCRUDwithORACLE.Models.ActaResponse
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Acta</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="COD_JUNTA" class="control-label"></label>
+                <input asp-for="COD_JUNTA" class="form-control" readonly />
+                <span asp-validation-for="COD_JUNTA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="COD_USUARIO" class="control-label"></label>
+                <input asp-for="COD_USUARIO" class="form-control" readonly/>
+                <span asp-validation-for="COD_USUARIO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CEDULA" class="control-label"></label>
+                <input asp-for="CEDULA" class="form-control" />
+                <span asp-validation-for="CEDULA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nom_Canton" class="control-label"></label>
+                <input asp-for="Nom_Canton" class="form-control" readonly />
+                <span asp-validation-for="Nom_Canton" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nom_Parroquia" class="control-label"></label>
+                <input asp-for="Nom_Parroquia" class="form-control" readonly />
+                <span asp-validation-for="Nom_Parroquia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nom_Zona" class="control-label"></label>
+                <input asp-for="Nom_Zona" class="form-control" readonly />
+                <span asp-validation-for="Nom_Zona" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Regresar al listado || </a>
+    <a asp-controller="Home" asp-action="Index">Regresar al Inicio || </a>
+    <a asp-controller="Account" asp-action="Login">Salir</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

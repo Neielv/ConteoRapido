@@ -1,0 +1,107 @@
+﻿@model IEnumerable<CoreCRUDwithORACLE.Models.ActaResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Actualización de Asignación de Actas</h1>
+
+@*<form asp-controller="Acta" asp-action="Edit" method="get">
+    <p>
+        Codigo Junta: <input type="text" name="SearchString">
+        <input type="submit" value="Buscar" />
+    </p>
+</form>
+<h1>Listado</h1>*@
+
+@*<p>
+    <a asp-action="IngresaUsuario">Asigna Usuario a Acta</a>
+</p>*@
+
+<div asp-validation-summary="All" class="text-danger"></div>
+@if (Model != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.COD_USUARIO)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nom_Provincia)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nom_Canton)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nom_Parroquia)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nom_Zona)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.junta)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.sexo)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.VOT_JUNTA)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BLA_JUNTA)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NUL_JUNTA)
+                    </th>*@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.COD_USUARIO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nom_Provincia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nom_Canton)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nom_Parroquia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nom_Zona)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.junta)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.sexo)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.ESTADO)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MAIL)
+                        </td>*@
+
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.COD_JUNTA })
+                        @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Regresar al Inicio || </a>
+    <a asp-controller="Account" asp-action="Login">Salir</a>
+</div>

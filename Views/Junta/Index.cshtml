@@ -1,0 +1,323 @@
+﻿@model IEnumerable<CoreCRUDwithORACLE.Models.Junta>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_PROVINCIA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_CANTON)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_PARROQUIA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_ZONA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SEXO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUMELE_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.STATUS_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ESTJUNNIVJUN_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUMELENIVJUN_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ESTJUNNIVREC_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUMELENIVREC_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ESTJUNNIVZON_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUMELNIVZON_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ESTJUNNIVPAD_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUMELENIVPAD_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CEDPRI_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DIGPRI_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NOMPRI_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CEDULT_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DIGJULT_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NOMULT_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EST2A)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUM2A)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EST2D)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUM2D)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EST3A)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUM3A)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EST3D)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUM3D)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ESTJUNSEX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NUMJUNSEX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_SEG_JUNTA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_SEG_NAC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_SEG_PRO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD4)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD5)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD6)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD7)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD8)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD9)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_RECINTO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_JIE)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_PROCESO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COD_CIRCUNSCRIPCION)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_PROVINCIA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_CANTON)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_PARROQUIA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_ZONA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SEXO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUMELE_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.STATUS_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ESTJUNNIVJUN_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUMELENIVJUN_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ESTJUNNIVREC_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUMELENIVREC_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ESTJUNNIVZON_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUMELNIVZON_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ESTJUNNIVPAD_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUMELENIVPAD_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CEDPRI_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DIGPRI_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NOMPRI_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CEDULT_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DIGJULT_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NOMULT_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EST2A)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUM2A)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EST2D)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUM2D)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EST3A)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUM3A)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EST3D)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUM3D)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ESTJUNSEX)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NUMJUNSEX)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_SEG_JUNTA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_SEG_NAC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_SEG_PRO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD3)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD4)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD5)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD6)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD7)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD8)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD9)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_RECINTO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_JIE)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_PROCESO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COD_CIRCUNSCRIPCION)
+            </td>
+            @*<td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>*@
+        </tr>
+}
+    </tbody>
+</table>
