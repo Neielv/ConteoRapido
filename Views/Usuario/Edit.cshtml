@@ -33,16 +33,13 @@
                 <input asp-for="CEDULA" class="form-control" readonly />
                 <span asp-validation-for="CEDULA" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DIGITO" class="control-label"></label>
-                <input asp-for="DIGITO" class="form-control" readonly />
-                <span asp-validation-for="DIGITO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LOGEO" class="control-label"></label>
-                <input asp-for="LOGEO" class="form-control" />
-                <span asp-validation-for="LOGEO" class="text-danger"></span>
-            </div>
+            @*<div class="form-group">
+            <label asp-for="DIGITO" class="control-label"></label>
+            <input asp-for="DIGITO" class="form-control" readonly />
+            <span asp-validation-for="DIGITO" class="text-danger"></span>
+        </div>*@
+            @Html.HiddenFor(u => u.LOGEO)
+            @Html.HiddenFor(u => u.DIGITO)
             @*<div class="form-group">
             <label asp-for="CLAVE" class="control-label"></label>
             <input asp-for="CLAVE" class="form-control" />
@@ -66,14 +63,19 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="ESTADO" class="control-label"></label>
-                <input asp-for="ESTADO" class="form-control" />
-                <span asp-validation-for="ESTADO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="MAIL" class="control-label"></label>
                 <input asp-for="MAIL" class="form-control" />
                 <span asp-validation-for="MAIL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TELEFONO" class="control-label"></label>
+                <input asp-for="TELEFONO" class="form-control" />
+                <span asp-validation-for="TELEFONO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ESTADO" class="control-label"></label>
+                <input asp-for="ESTADO" class="form-control" />
+                <span asp-validation-for="ESTADO" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
@@ -83,7 +85,8 @@
 </div>
 
 <div>
-    <a asp-action="Index">Regresar al listado</a>
+    <a asp-action="Index">Regresar al listado | </a>
+    <a asp-controller="Account" asp-action="Logout">Salir</a>
 </div>
 
 @section Scripts {

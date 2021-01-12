@@ -22,6 +22,9 @@ namespace CoreCRUDwithORACLE.Controllers
 
         public IActionResult Index()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+
             ViewBag.CODROL = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
             return View();
         }

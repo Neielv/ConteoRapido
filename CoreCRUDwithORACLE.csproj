@@ -17,11 +17,13 @@
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.19.80" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.100" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.7" />
     <PackageReference Include="Twitter.Bootstrap.MVC" Version="2.1.6" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\NewFolder\" />
+    <Folder Include="Views\Reportes\" />
   </ItemGroup>
 
 </Project>

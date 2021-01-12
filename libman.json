@@ -5,6 +5,19 @@
     {
       "library": "twitter-bootstrap@4.5.3",
       "destination": "wwwroot/lib/twitter-bootstrap/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "datatables.net@1.10.23",
+      "destination": "vendor/datatables.net/"
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "vendor/datatables/"
+    },
+    {
+      "library": "datatables.net-responsive-bs@2.2.7",
+      "destination": "vendor/datatables.net-responsive-bs/"
     }
   ]
 }

@@ -28,6 +28,8 @@ namespace CoreCRUDwithORACLE.Controllers
         }
         public IActionResult Index()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
 
             IEnumerable<Usuario> usuarios = servicioUsuario.GetUsuarios(Convert.ToInt32(HttpContext.Session.GetString("cod_rol")),
                                                                         Convert.ToInt32(HttpContext.Session.GetString("cod_provincia")));
@@ -43,12 +45,8 @@ namespace CoreCRUDwithORACLE.Controllers
 
         public ActionResult Edit(string id)
         {
-            //Usuario usuario = servicioUsuario.GetUsuario(id);
-            //if (usuario != null)
-            //    return View(usuario);
-            //else
-            //    return View();
-            //Usuario usuarioActualizado = servicioUsuario.ObtieneUsuario(usuario);
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
 
             int codigoRol = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
             int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
@@ -59,7 +57,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 return View();
 
             UsuarioViewModel usuarioViewModel = new UsuarioViewModel();
-            usuarioViewModel.CEDULA = usuario.CEDULA.Substring(0, 9);
+            usuarioViewModel.CEDULA = usuario.CEDULA;
             usuarioViewModel.COD_USUARIO = usuario.COD_USUARIO;
             usuarioViewModel.ESTADO = usuario.ESTADO;
             usuarioViewModel.DIGITO = usuario.CEDULA.Substring(9, 1);
@@ -67,97 +65,29 @@ namespace CoreCRUDwithORACLE.Controllers
             usuarioViewModel.MAIL = usuario.MAIL;
             usuarioViewModel.NOMBRE = usuario.NOMBRE;
             usuarioViewModel.PROVINCIA = usuario.PROVINCIA;
+            usuarioViewModel.TELEFONO = usuario.TELEFONO;
             usuarioViewModel.ROL = usuario.ROL;
 
             var provincias = (from Provincia in auc.PROVINCIA
-                          where Provincia.COD_PROVINCIA == usuario.COD_PROVINCIA
-                          orderby Provincia.NOM_PROVINCIA
-                          select new SelectListItem()
-                          {
-                              Text = Provincia.NOM_PROVINCIA,
-                              Value = Provincia.COD_PROVINCIA.ToString()
-                          }).ToList();
+                              where Provincia.COD_PROVINCIA == usuario.COD_PROVINCIA
+                              orderby Provincia.NOM_PROVINCIA
+                              select new SelectListItem()
+                              {
+                                  Text = Provincia.NOM_PROVINCIA,
+                                  Value = Provincia.COD_PROVINCIA.ToString()
+                              }).ToList();
 
             usuarioViewModel.provincias = provincias;
 
             var roles = (from Rol in auc.ROL
-                     where Rol.COD_ROL == usuario.COD_ROL
-                     select new SelectListItem()
-                     {
-                         Text = Rol.DES_ROL,
-                         Value = Rol.COD_ROL.ToString()
-                     }).ToList();
+                         where Rol.COD_ROL == usuario.COD_ROL
+                         select new SelectListItem()
+                         {
+                             Text = Rol.DES_ROL,
+                             Value = Rol.COD_ROL.ToString()
+                         }).ToList();
 
             usuarioViewModel.roles = roles;
-
-            //switch (codigoRol)
-            //{
-            //    case 1:
-
-            //        //var provincias = (from Provincia in auc.PROVINCIA
-            //        //                  where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
-            //        //                  orderby Provincia.NOM_PROVINCIA
-            //        //                  select new SelectListItem()
-            //        //                  {
-            //        //                      Text = Provincia.NOM_PROVINCIA,
-            //        //                      Value = Provincia.COD_PROVINCIA.ToString()
-            //        //                  }).ToList();
-
-            //        //provincias.Find(c => c.Value == usuario.COD_PROVINCIA.ToString()).Selected = true;
-
-
-            //        var roles = (from Rol in auc.ROL
-            //                     where Rol.COD_ROL > 1
-            //                     select new SelectListItem()
-            //                     {
-            //                         Text = Rol.DES_ROL,
-            //                         Value = Rol.COD_ROL.ToString()
-            //                     }).ToList();
-
-            //        //roles.Find(r => r.Value == usuario.COD_ROL.ToString()).Selected = true;
-
-            //        //usuarioViewModel.provincias = provincias;
-            //        usuarioViewModel.roles = roles;
-            //        break;
-            //    case 2:
-            //        provincias = (from Provincia in auc.PROVINCIA
-            //                      where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
-            //                      orderby Provincia.NOM_PROVINCIA
-            //                      select new SelectListItem()
-            //                      {
-            //                          Text = Provincia.NOM_PROVINCIA,
-            //                          Value = Provincia.COD_PROVINCIA.ToString()
-            //                      }).ToList();
-
-            //        provincias.Find(c => c.Value == usuario.COD_PROVINCIA.ToString()).Selected = true;
-
-            //        roles = (from Rol in auc.ROL
-            //                 where Rol.COD_ROL == 3 || Rol.COD_ROL == 5 || Rol.COD_ROL == 6
-            //                 select new SelectListItem()
-            //                 {
-            //                     Text = Rol.DES_ROL,
-            //                     Value = Rol.COD_ROL.ToString()
-            //                 }).ToList();
-
-            //        roles.Find(r => r.Value == usuario.COD_ROL.ToString()).Selected = true;
-
-            //        usuarioViewModel.provincias = provincias;
-            //        usuarioViewModel.roles = roles;
-            //        break;
-            //    case 3:
-
-
-            //        roles = (from Rol in auc.ROL
-            //                 where Rol.COD_ROL == usuario.COD_ROL
-            //                 select new SelectListItem()
-            //                 {
-            //                     Text = Rol.DES_ROL,
-            //                     Value = Rol.COD_ROL.ToString()
-            //                 }).ToList();
-            //        usuarioViewModel.provincias = provincias;
-            //        usuarioViewModel.roles = roles;
-            //        break;
-            //}
 
             return View(usuarioViewModel);
         }
@@ -165,9 +95,12 @@ namespace CoreCRUDwithORACLE.Controllers
         [HttpPost]
         public ActionResult Edit(UsuarioViewModel usuarioMod)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+
             UsuarioResponse usuario = new UsuarioResponse()
             {
-                CEDULA = usuarioMod.CEDULA,
+                CEDULA = usuarioMod.CEDULA.Substring(0,9),
                 CODIGO_PROVINCIA = usuarioMod.codProvincia,
                 CODIGO_ROL = usuarioMod.codRol,
                 COD_USUARIO = usuarioMod.COD_USUARIO,
@@ -176,6 +109,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 LOGEO = usuarioMod.LOGEO,
                 MAIL = usuarioMod.MAIL,
                 NOMBRE = usuarioMod.NOMBRE,
+                TELEFONO = usuarioMod.TELEFONO,
                 PROVINCIA = usuarioMod.PROVINCIA,
                 ROL = usuarioMod.ROL
             };
@@ -186,18 +120,54 @@ namespace CoreCRUDwithORACLE.Controllers
             }
             catch (Exception ex)
             {
+                var provincias = (from Provincia in auc.PROVINCIA
+                                  where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
+                                  orderby Provincia.NOM_PROVINCIA
+                                  select new SelectListItem()
+                                  {
+                                      Text = Provincia.NOM_PROVINCIA,
+                                      Value = Provincia.COD_PROVINCIA.ToString()
+                                  }).ToList();
+
+                provincias.Insert(0, new SelectListItem()
+                {
+                    Text = "----Elija Provincia----",
+                    Value = string.Empty
+                });
+
+                var roles = (from Rol in auc.ROL
+                             where Rol.COD_ROL > 1
+                             select new SelectListItem()
+                             {
+                                 Text = Rol.DES_ROL,
+                                 Value = Rol.COD_ROL.ToString(),
+                                 Selected = false
+                             }).ToList();
+
+                roles.Insert(0, new SelectListItem()
+                {
+                    Text = "----Elija Rol----",
+                    Value = string.Empty
+                });
+
+                usuarioMod.provincias = provincias;
+                usuarioMod.roles = roles;
+
                 ModelState.AddModelError(string.Empty, "Error al actualizar");
-                return View();
+                return View(usuarioMod);
             }
             //return View(respuesta);
             //if (respuesta != null)
-                //return RedirectToPage("/Index");
-                
+            //return RedirectToPage("/Index");
+
             //else
             //return View();
         }
         public ActionResult IngresaUsuario()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+
             int codigoRol = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
             int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
 
@@ -208,7 +178,7 @@ namespace CoreCRUDwithORACLE.Controllers
             {
                 case 1:
                     var provincias = (from Provincia in auc.PROVINCIA
-                                      where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
+                                      where Provincia.COD_PROVINCIA == 0
                                       orderby Provincia.NOM_PROVINCIA
                                       select new SelectListItem()
                                       {
@@ -216,14 +186,8 @@ namespace CoreCRUDwithORACLE.Controllers
                                           Value = Provincia.COD_PROVINCIA.ToString()
                                       }).ToList();
 
-                    provincias.Insert(0, new SelectListItem()
-                    {
-                        Text = "----Elija Provincia----",
-                        Value = string.Empty
-                    });
-
                     var roles = (from Rol in auc.ROL
-                                 where Rol.COD_ROL > 1
+                                 where Rol.COD_ROL == 2
                                  select new SelectListItem()
                                  {
                                      Text = Rol.DES_ROL,
@@ -231,23 +195,23 @@ namespace CoreCRUDwithORACLE.Controllers
                                      Selected = false
                                  }).ToList();
 
-                    roles.Insert(0, new SelectListItem()
-                    {
-                        Text = "----Elija Rol----",
-                        Value = string.Empty
-                    });
+                    //roles.Insert(0, new SelectListItem()
+                    //{
+                    //    Text = "----Elija Rol----",
+                    //    Value = string.Empty
+                    //});
                     usuarioViewModel.provincias = provincias;
                     usuarioViewModel.roles = roles;
                     break;
                 case 2:
                     provincias = (from Provincia in auc.PROVINCIA
-                                      where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
-                                      orderby Provincia.NOM_PROVINCIA
-                                      select new SelectListItem()
-                                      {
-                                          Text = Provincia.NOM_PROVINCIA,
-                                          Value = Provincia.COD_PROVINCIA.ToString()
-                                      }).ToList();
+                                  where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
+                                  orderby Provincia.NOM_PROVINCIA
+                                  select new SelectListItem()
+                                  {
+                                      Text = Provincia.NOM_PROVINCIA,
+                                      Value = Provincia.COD_PROVINCIA.ToString()
+                                  }).ToList();
 
                     provincias.Insert(0, new SelectListItem()
                     {
@@ -256,13 +220,13 @@ namespace CoreCRUDwithORACLE.Controllers
                     });
 
                     roles = (from Rol in auc.ROL
-                                 where Rol.COD_ROL == 3 || Rol.COD_ROL == 5 || Rol.COD_ROL == 6
+                             where Rol.COD_ROL == 3 || Rol.COD_ROL == 5 || Rol.COD_ROL == 6
                              select new SelectListItem()
-                                 {
-                                     Text = Rol.DES_ROL,
-                                     Value = Rol.COD_ROL.ToString(),
-                                     Selected = false
-                                 }).ToList();
+                             {
+                                 Text = Rol.DES_ROL,
+                                 Value = Rol.COD_ROL.ToString(),
+                                 Selected = false
+                             }).ToList();
 
                     roles.Insert(0, new SelectListItem()
                     {
@@ -301,13 +265,46 @@ namespace CoreCRUDwithORACLE.Controllers
         [HttpPost]
         public ActionResult IngresaUsuario(UsuarioViewModel usuarionNew)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
 
-            Usuario validacionUsuario = servicioUsuario.GetUsuario(usuarionNew.CEDULA);
+            Usuario validacionUsuario = servicioUsuario.GetUsuario(usuarionNew.CEDULAC);
 
             if (validacionUsuario != null)
             {
+                var provincias = (from Provincia in auc.PROVINCIA
+                                  where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
+                                  orderby Provincia.NOM_PROVINCIA
+                                  select new SelectListItem()
+                                  {
+                                      Text = Provincia.NOM_PROVINCIA,
+                                      Value = Provincia.COD_PROVINCIA.ToString()
+                                  }).ToList();
+
+                provincias.Insert(0, new SelectListItem()
+                {
+                    Text = "----Elija Provincia----",
+                    Value = string.Empty
+                });
+
+                var roles = (from Rol in auc.ROL
+                             where Rol.COD_ROL > 1
+                             select new SelectListItem()
+                             {
+                                 Text = Rol.DES_ROL,
+                                 Value = Rol.COD_ROL.ToString(),
+                                 Selected = false
+                             }).ToList();
+
+                roles.Insert(0, new SelectListItem()
+                {
+                    Text = "----Elija Rol----",
+                    Value = string.Empty
+                });
+                usuarionNew.provincias = provincias;
+                usuarionNew.roles = roles;
                 ModelState.AddModelError(string.Empty, "Ya existe un usuario con la cédula ingresada.");
-                return View();
+                return View(usuarionNew);
             }
 
             UsuarioResponse usuario = new UsuarioResponse()
@@ -329,7 +326,34 @@ namespace CoreCRUDwithORACLE.Controllers
             if (respuesta > 0)
                 return RedirectToAction(nameof(Index));
             else
-                return RedirectToAction("Error", "Shared");
+            {
+                ModelState.AddModelError(string.Empty, "Existió un error al ingresar el usuario.");
+                return View(usuarionNew);
+            }
+        }
+
+        public ActionResult ActualizaClave(string cedula)
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+
+            Usuario usuario = servicioUsuario.GetUsuario(cedula);
+            return View(usuario);
+        }
+        [HttpPost]
+        public ActionResult ActualizaClave(Usuario usuarioNew)
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+            Usuario usuario = servicioUsuario.ActualizaClave(usuarioNew);
+
+            if (usuario != null)
+                return View(usuario);
+            else
+            {
+                ModelState.AddModelError(string.Empty, "No se pudo actualizar el usuario.");
+                return View(usuarioNew);
+            }
         }
     }
 }

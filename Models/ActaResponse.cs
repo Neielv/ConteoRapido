@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace CoreCRUDwithORACLE.Models
 
         //P.COD_PROVINCIA, P.NOM_PROVINCIA, C.COD_CANTON,C.NOM_CANTON,Q.COD_PARROQUIA, Q.NOM_PARROQUIA, Z.COD_ZONA,Z.NOM_ZONA, 
         //J.JUNTA, J.SEXO, A.COD_JUNTA, A.COD_USUARIO,VOT_JUNTA,BLA_JUNTA,NUL_JUNTA
-
+        public string USUARIO { get; set; }
         public int Cod_Provincia { get; set; }
         [DisplayName("PROVINCIA")]
         public string Nom_Provincia { get; set; }
@@ -36,6 +37,7 @@ namespace CoreCRUDwithORACLE.Models
         public string junta { get; set; }
         [DisplayName("SEXO")]
         public string sexo { get; set; }
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "El campo cédula debe tener mínimo 10 dígitos")]
         public string CEDULA { get; set; }
         public int CodigoJunta { get; set; }
         public List<SelectListItem> Juntas { get; set; }
