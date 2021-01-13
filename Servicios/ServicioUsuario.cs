@@ -64,8 +64,8 @@ namespace CoreCRUDwithORACLE.Servicios
 
         private string actualizaUsuarioClave = @"UPDATE CONTEORAPIDO2021.USUARIO
                                                     SET    CLA_USUARIO     = '{0}',
-                                                           EST_CLA_USUARIO = 1
-                                                    WHERE  CED_USUARIO     = '{1}'";
+                                                           EST_CLA_USUARIO = {1}
+                                                    WHERE  CED_USUARIO     = '{2}'";
         public ServicioUsuario(IConfiguration _configuration)
         {
             _conn = _configuration.GetConnectionString("OracleDBConnection");
@@ -207,7 +207,7 @@ namespace CoreCRUDwithORACLE.Servicios
 
         public Usuario ActualizaUsuario(UsuarioResponse usuarioActualizado)
         {
-            //string clave = string.Empty;
+            string telefono = usuarioActualizado.TELEFONO;
             Usuario usuario = null;
 
             usuario = GetUsuario(usuarioActualizado.CEDULA);
@@ -228,9 +228,9 @@ namespace CoreCRUDwithORACLE.Servicios
 
                             //clave = _helper.EncodePassword(usuarioActualizado.CLAVE); 
                             cmd.CommandText = string.Format(actualizaUsuario, usuarioActualizado.CODIGO_ROL, usuarioActualizado.LOGEO,
-                                                            usuarioActualizado.CEDULA, usuarioActualizado.DIGITO, 
-                                                            usuarioActualizado.NOMBRE, usuarioActualizado.MAIL, usuarioActualizado.ESTADO?"1":"0", 
-                                                            usuarioActualizado.CODIGO_PROVINCIA, usuarioActualizado.TELEFONO.ToString(), usuarioActualizado.COD_USUARIO);
+                                                            usuarioActualizado.CEDULA, usuarioActualizado.DIGITO, usuarioActualizado.NOMBRE,
+                                                            usuarioActualizado.MAIL, usuarioActualizado.ESTADO?"1":"0", usuarioActualizado.CODIGO_PROVINCIA,
+                                                            telefono, usuarioActualizado.COD_USUARIO);
 
                             int odr = cmd.ExecuteNonQuery();
 
@@ -415,7 +415,7 @@ namespace CoreCRUDwithORACLE.Servicios
             }
         }
 
-        public Usuario ActualizaClave(Usuario usuarioNew)
+        public Usuario ActualizaClave(Usuario usuarioNew, int estado)
         {
             Usuario usuario = null;
             string clave = string.Empty;
@@ -424,6 +424,10 @@ namespace CoreCRUDwithORACLE.Servicios
 
             if (usuario != null)
             {
+                clave = _helper.EncodePassword(usuarioNew.CLAVE);
+                if (_helper.EncodePassword(usuario.CLAVE) == clave)
+                    return usuario = null;
+
                 using (OracleConnection con = new OracleConnection(_conn))
                 {
                     using (OracleCommand cmd = new OracleCommand())
@@ -436,8 +440,8 @@ namespace CoreCRUDwithORACLE.Servicios
                             cmd.CommandType = CommandType.Text;
                             //cmd.CommandText = "CONSULTA_AUTENTICACION_USUARIO";
 
-                            clave = _helper.EncodePassword(usuarioNew.CLAVE);
-                            cmd.CommandText = string.Format(actualizaUsuarioClave, clave,
+                            
+                            cmd.CommandText = string.Format(actualizaUsuarioClave, clave, estado,
                                                             usuarioNew.CEDULA.Substring(0,9));
 
                             int odr = cmd.ExecuteNonQuery();

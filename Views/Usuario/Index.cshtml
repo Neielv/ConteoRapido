@@ -4,6 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
+
+
 <h1>Gestión de Usuarios</h1>
 @if (ViewBag.CODROL != 4)
 {
@@ -11,6 +13,8 @@
         <a asp-action="IngresaUsuario">Crear nuevo usuario</a>
     </p>
 }
+
+
 <div asp-validation-summary="All" class="text-danger"></div>
 @if (Model != null)
 {
@@ -88,6 +92,14 @@
             }
         </tbody>
     </table>
+}
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
 }
 <div>
     <a asp-controller="Home" asp-action="Index">Regresar al Inicio | </a>

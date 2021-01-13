@@ -1,4 +1,5 @@
-﻿using CoreCRUDwithORACLE.Interfaces;
+﻿using CoreCRUDwithORACLE.Comunes;
+using CoreCRUDwithORACLE.Interfaces;
 using CoreCRUDwithORACLE.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +16,7 @@ namespace CoreCRUDwithORACLE.Controllers
     {
         //[Produces("application/json")]
         IServicioUsuario servicioUsuario;
+        private static Auxiliar auxiliar;
         private readonly ApplicationUser auc;
 
         public UsuarioController(IServicioUsuario _servicioUsuario, ApplicationUser auc)
@@ -98,9 +100,49 @@ namespace CoreCRUDwithORACLE.Controllers
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
+            var provincias = (from Provincia in auc.PROVINCIA
+                              where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
+                              orderby Provincia.NOM_PROVINCIA
+                              select new SelectListItem()
+                              {
+                                  Text = Provincia.NOM_PROVINCIA,
+                                  Value = Provincia.COD_PROVINCIA.ToString()
+                              }).ToList();
+
+            provincias.Insert(0, new SelectListItem()
+            {
+                Text = "----Elija Provincia----",
+                Value = string.Empty
+            });
+
+            var roles = (from Rol in auc.ROL
+                         where Rol.COD_ROL > 1
+                         select new SelectListItem()
+                         {
+                             Text = Rol.DES_ROL,
+                             Value = Rol.COD_ROL.ToString(),
+                             Selected = false
+                         }).ToList();
+
+            roles.Insert(0, new SelectListItem()
+            {
+                Text = "----Elija Rol----",
+                Value = string.Empty
+            });
+
+            usuarioMod.provincias = provincias;
+            usuarioMod.roles = roles;
+
+
+            if (!auxiliar.validarCedula(usuarioMod.CEDULA))
+            {
+                ModelState.AddModelError(string.Empty, "La cédula ingresada es incorrecta.");
+                return View(usuarioMod);
+            }
+
             UsuarioResponse usuario = new UsuarioResponse()
             {
-                CEDULA = usuarioMod.CEDULA.Substring(0,9),
+                CEDULA = usuarioMod.CEDULA.Substring(0, 9),
                 CODIGO_PROVINCIA = usuarioMod.codProvincia,
                 CODIGO_ROL = usuarioMod.codRol,
                 COD_USUARIO = usuarioMod.COD_USUARIO,
@@ -113,49 +155,22 @@ namespace CoreCRUDwithORACLE.Controllers
                 PROVINCIA = usuarioMod.PROVINCIA,
                 ROL = usuarioMod.ROL
             };
+
             try
             {
                 Usuario respuesta = servicioUsuario.ActualizaUsuario(usuario);
+                ViewBag.Message = "Usuario actualizado exitosamente!";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                var provincias = (from Provincia in auc.PROVINCIA
-                                  where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
-                                  orderby Provincia.NOM_PROVINCIA
-                                  select new SelectListItem()
-                                  {
-                                      Text = Provincia.NOM_PROVINCIA,
-                                      Value = Provincia.COD_PROVINCIA.ToString()
-                                  }).ToList();
 
-                provincias.Insert(0, new SelectListItem()
-                {
-                    Text = "----Elija Provincia----",
-                    Value = string.Empty
-                });
-
-                var roles = (from Rol in auc.ROL
-                             where Rol.COD_ROL > 1
-                             select new SelectListItem()
-                             {
-                                 Text = Rol.DES_ROL,
-                                 Value = Rol.COD_ROL.ToString(),
-                                 Selected = false
-                             }).ToList();
-
-                roles.Insert(0, new SelectListItem()
-                {
-                    Text = "----Elija Rol----",
-                    Value = string.Empty
-                });
-
-                usuarioMod.provincias = provincias;
-                usuarioMod.roles = roles;
 
                 ModelState.AddModelError(string.Empty, "Error al actualizar");
                 return View(usuarioMod);
             }
+
+
             //return View(respuesta);
             //if (respuesta != null)
             //return RedirectToPage("/Index");
@@ -178,7 +193,7 @@ namespace CoreCRUDwithORACLE.Controllers
             {
                 case 1:
                     var provincias = (from Provincia in auc.PROVINCIA
-                                      where Provincia.COD_PROVINCIA == 0
+                                      where Provincia.COD_PROVINCIA == -1
                                       orderby Provincia.NOM_PROVINCIA
                                       select new SelectListItem()
                                       {
@@ -268,41 +283,50 @@ namespace CoreCRUDwithORACLE.Controllers
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
+            auxiliar = new Auxiliar();
+
+            var provincias = (from Provincia in auc.PROVINCIA
+                              where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
+                              orderby Provincia.NOM_PROVINCIA
+                              select new SelectListItem()
+                              {
+                                  Text = Provincia.NOM_PROVINCIA,
+                                  Value = Provincia.COD_PROVINCIA.ToString()
+                              }).ToList();
+
+            provincias.Insert(0, new SelectListItem()
+            {
+                Text = "----Elija Provincia----",
+                Value = string.Empty
+            });
+
+            var roles = (from Rol in auc.ROL
+                         where Rol.COD_ROL > 1
+                         select new SelectListItem()
+                         {
+                             Text = Rol.DES_ROL,
+                             Value = Rol.COD_ROL.ToString(),
+                             Selected = false
+                         }).ToList();
+
+            roles.Insert(0, new SelectListItem()
+            {
+                Text = "----Elija Rol----",
+                Value = string.Empty
+            });
+            usuarionNew.provincias = provincias;
+            usuarionNew.roles = roles;
+
+            if (!auxiliar.validarCedula(usuarionNew.CEDULAC))
+            {
+                ModelState.AddModelError(string.Empty, "La cédula ingresada es incorrecta.");
+                return View(usuarionNew);
+            }
+
             Usuario validacionUsuario = servicioUsuario.GetUsuario(usuarionNew.CEDULAC);
 
             if (validacionUsuario != null)
             {
-                var provincias = (from Provincia in auc.PROVINCIA
-                                  where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
-                                  orderby Provincia.NOM_PROVINCIA
-                                  select new SelectListItem()
-                                  {
-                                      Text = Provincia.NOM_PROVINCIA,
-                                      Value = Provincia.COD_PROVINCIA.ToString()
-                                  }).ToList();
-
-                provincias.Insert(0, new SelectListItem()
-                {
-                    Text = "----Elija Provincia----",
-                    Value = string.Empty
-                });
-
-                var roles = (from Rol in auc.ROL
-                             where Rol.COD_ROL > 1
-                             select new SelectListItem()
-                             {
-                                 Text = Rol.DES_ROL,
-                                 Value = Rol.COD_ROL.ToString(),
-                                 Selected = false
-                             }).ToList();
-
-                roles.Insert(0, new SelectListItem()
-                {
-                    Text = "----Elija Rol----",
-                    Value = string.Empty
-                });
-                usuarionNew.provincias = provincias;
-                usuarionNew.roles = roles;
                 ModelState.AddModelError(string.Empty, "Ya existe un usuario con la cédula ingresada.");
                 return View(usuarionNew);
             }
@@ -324,7 +348,10 @@ namespace CoreCRUDwithORACLE.Controllers
 
             int respuesta = servicioUsuario.IngresaUsuario(usuario);
             if (respuesta > 0)
+            {
+                ViewBag.Message = "Usuaria ingresado exitosamente!";
                 return RedirectToAction(nameof(Index));
+            }
             else
             {
                 ModelState.AddModelError(string.Empty, "Existió un error al ingresar el usuario.");
@@ -345,10 +372,20 @@ namespace CoreCRUDwithORACLE.Controllers
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
-            Usuario usuario = servicioUsuario.ActualizaClave(usuarioNew);
+
+            //string codRol = usuarioNew.
+
+            Usuario usuario = null;
+            if (usuarioNew.COD_ROL == 3)
+                usuario = servicioUsuario.ActualizaClave(usuarioNew, 1);
+            else if (usuarioNew.COD_ROL == 2)
+                usuario = servicioUsuario.ActualizaClave(usuarioNew, 0);
 
             if (usuario != null)
-                return View(usuario);
+            {
+                ViewBag.Message = "Usuario actualizado exitosamente!";
+                return RedirectToAction(nameof(Index));
+            }
             else
             {
                 ModelState.AddModelError(string.Empty, "No se pudo actualizar el usuario.");

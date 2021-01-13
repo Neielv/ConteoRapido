@@ -68,7 +68,7 @@
                         @if (ViewBag.CODROL != 1)
                         {
                             if (ViewBag.CODROL == 3)
-                            { 
+                            {
                                 <li class="nav-item">
                                     <a asp-action="index" asp-controller="Acta" class="nav-link">Administrador de Actas</a>
                                 </li>
@@ -113,6 +113,14 @@
             $("#wrapper").toggleClass("toggled");
         });</script>
 
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+        </script>
+    }
 </body>
 
 </html>
