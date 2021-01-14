@@ -26,7 +26,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 return RedirectToAction("Logout", "Account");
 
             ViewBag.CODROL = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
-            ViewBag.Message = "Bienvenido " + Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
+            //ViewBag.Message = "Bienvenido " + Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
             return View();
         }
 

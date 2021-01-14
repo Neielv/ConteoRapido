@@ -157,6 +157,14 @@
     </a>
 }
 
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+}
 <div>
     <a asp-controller="Home" asp-action="Index">Regresar al Inicio || </a>
     <a asp-controller="Account" asp-action="Logout">Salir</a>

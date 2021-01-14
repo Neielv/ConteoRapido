@@ -24,7 +24,7 @@ namespace CoreCRUDwithORACLE.Servicios
                                            AND US.COD_ROL = RO.COD_ROL";
 
         private string consultaUser = @"SELECT US.COD_USUARIO, PR.COD_PROVINCIA, PR.NOM_PROVINCIA, US.CED_USUARIO || US.DIG_USUARIO CEDULA, US.LOG_USUARIO,
-                                               US.NOM_USUARIO, RO.COD_ROL, RO.DES_ROL, US.EST_USUARIO, US.MAI_USUARIO
+                                               US.TEL_USUARIO, US.NOM_USUARIO, RO.COD_ROL, RO.DES_ROL, US.EST_USUARIO, US.MAI_USUARIO, US.CLA_USUARIO
                                            FROM USUARIO US, PROVINCIA PR, ROL RO
                                            WHERE US.COD_PROVINCIA = PR.COD_PROVINCIA
                                            AND US.COD_ROL = RO.COD_ROL
@@ -48,7 +48,7 @@ namespace CoreCRUDwithORACLE.Servicios
                                            EST_CLA_USUARIO, NIV_USUARIO, COD_PROVINCIA, PRI_LOG_USUARIO, 
                                            INT_LOGIN, TEL_USUARIO, ULT_USUARIO) 
                                            VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8}, 0, 0,
-                                             {9}, NULL, NULL, NULL, NULL)";
+                                             {9}, NULL, NULL, '{10}', NULL)";
 
         private string actualizaUsuario = @"UPDATE CONTEORAPIDO2021.USUARIO
                                             SET    COD_ROL         = {0},
@@ -59,12 +59,12 @@ namespace CoreCRUDwithORACLE.Servicios
                                                    MAI_USUARIO     = '{5}',
                                                    EST_USUARIO     = '{6}',
                                                    COD_PROVINCIA   =  {7},
-                                                   TEL_USUARIO     = '{8)'
+                                                   TEL_USUARIO     = '{8}'
                                             WHERE  COD_USUARIO     = {9}";
 
         private string actualizaUsuarioClave = @"UPDATE CONTEORAPIDO2021.USUARIO
                                                     SET    CLA_USUARIO     = '{0}',
-                                                           EST_CLA_USUARIO = {1}
+                                                           EST_CLA_USUARIO = '{1}'
                                                     WHERE  CED_USUARIO     = '{2}'";
         public ServicioUsuario(IConfiguration _configuration)
         {
@@ -177,12 +177,13 @@ namespace CoreCRUDwithORACLE.Servicios
                                 usuario.COD_USUARIO = Convert.ToInt32(odr["COD_USUARIO"]);
                                 usuario.CEDULA = Convert.ToString(odr["CEDULA"]);
                                 usuario.COD_PROVINCIA = Convert.ToInt32(odr["COD_PROVINCIA"]);
-                                //usuario.CLAVE = Convert.ToString(odr["CLA_USUARIO"]);
+                                usuario.CLAVE = Convert.ToString(odr["CLA_USUARIO"]);
                                 usuario.ESTADO = (Convert.ToString(odr["EST_USUARIO"]) == "1" ? true : false);
                                 usuario.NOMBRE = Convert.ToString(odr["NOM_USUARIO"]);
                                 usuario.PROVINCIA = Convert.ToString(odr["NOM_PROVINCIA"]);
                                 usuario.LOGEO = Convert.ToString(odr["LOG_USUARIO"]);
                                 usuario.COD_ROL = Convert.ToInt32(odr["COD_ROL"]);
+                                usuario.TELEFONO = Convert.ToString(odr["TEL_USUARIO"]); 
                                 usuario.ROL = Convert.ToString(odr["DES_ROL"]);
                                 usuario.MAIL = Convert.ToString(odr["MAI_USUARIO"]);
                             }
@@ -393,7 +394,7 @@ namespace CoreCRUDwithORACLE.Servicios
 
                         cmd.CommandText = string.Format(ingresaUsuario, usuario.COD_USUARIO, usuario.CODIGO_ROL, usuario.LOGEO,
                                                 _helper.EncodePassword(usuario.CLAVE), usuario.CEDULA.Substring(0,9), usuario.CEDULA.Substring(9, 1),
-                                                usuario.NOMBRE, usuario.MAIL, usuario.ESTADO?"1":"0", usuario.CODIGO_PROVINCIA);
+                                                usuario.NOMBRE, usuario.MAIL, usuario.ESTADO?"1":"0", usuario.CODIGO_PROVINCIA, usuario.TELEFONO);
 
                         respuesta = cmd.ExecuteNonQuery();
                         return respuesta;
@@ -425,7 +426,7 @@ namespace CoreCRUDwithORACLE.Servicios
             if (usuario != null)
             {
                 clave = _helper.EncodePassword(usuarioNew.CLAVE);
-                if (_helper.EncodePassword(usuario.CLAVE) == clave)
+                if (usuario.CLAVE == clave)
                     return usuario = null;
 
                 using (OracleConnection con = new OracleConnection(_conn))

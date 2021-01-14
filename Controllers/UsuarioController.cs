@@ -18,6 +18,7 @@ namespace CoreCRUDwithORACLE.Controllers
         IServicioUsuario servicioUsuario;
         private static Auxiliar auxiliar;
         private readonly ApplicationUser auc;
+        private string mensaje = string.Empty;
 
         public UsuarioController(IServicioUsuario _servicioUsuario, ApplicationUser auc)
         {
@@ -40,6 +41,8 @@ namespace CoreCRUDwithORACLE.Controllers
                 ModelState.AddModelError(string.Empty, "No existen usuarios");
                 return View();
             }
+            if (!string.IsNullOrEmpty(mensaje))
+                ViewBag.Message = mensaje;
 
             return View(usuarios);
 
@@ -133,6 +136,7 @@ namespace CoreCRUDwithORACLE.Controllers
             usuarioMod.provincias = provincias;
             usuarioMod.roles = roles;
 
+            auxiliar = new Auxiliar();
 
             if (!auxiliar.validarCedula(usuarioMod.CEDULA))
             {
@@ -283,39 +287,96 @@ namespace CoreCRUDwithORACLE.Controllers
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
+            int codigoRol = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
+            int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
             auxiliar = new Auxiliar();
 
-            var provincias = (from Provincia in auc.PROVINCIA
-                              where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
-                              orderby Provincia.NOM_PROVINCIA
-                              select new SelectListItem()
-                              {
-                                  Text = Provincia.NOM_PROVINCIA,
-                                  Value = Provincia.COD_PROVINCIA.ToString()
-                              }).ToList();
-
-            provincias.Insert(0, new SelectListItem()
+            switch (codigoRol)
             {
-                Text = "----Elija Provincia----",
-                Value = string.Empty
-            });
+                case 1:
+                    var provincias = (from Provincia in auc.PROVINCIA
+                                      where Provincia.COD_PROVINCIA == -1
+                                      orderby Provincia.NOM_PROVINCIA
+                                      select new SelectListItem()
+                                      {
+                                          Text = Provincia.NOM_PROVINCIA,
+                                          Value = Provincia.COD_PROVINCIA.ToString()
+                                      }).ToList();
 
-            var roles = (from Rol in auc.ROL
-                         where Rol.COD_ROL > 1
-                         select new SelectListItem()
-                         {
-                             Text = Rol.DES_ROL,
-                             Value = Rol.COD_ROL.ToString(),
-                             Selected = false
-                         }).ToList();
+                    var roles = (from Rol in auc.ROL
+                                 where Rol.COD_ROL == 2
+                                 select new SelectListItem()
+                                 {
+                                     Text = Rol.DES_ROL,
+                                     Value = Rol.COD_ROL.ToString(),
+                                     Selected = false
+                                 }).ToList();
 
-            roles.Insert(0, new SelectListItem()
-            {
-                Text = "----Elija Rol----",
-                Value = string.Empty
-            });
-            usuarionNew.provincias = provincias;
-            usuarionNew.roles = roles;
+                    //roles.Insert(0, new SelectListItem()
+                    //{
+                    //    Text = "----Elija Rol----",
+                    //    Value = string.Empty
+                    //});
+                    usuarionNew.provincias = provincias;
+                    usuarionNew.roles = roles;
+                    break;
+                case 2:
+                    provincias = (from Provincia in auc.PROVINCIA
+                                  where Provincia.COD_PROVINCIA > 0 && Provincia.COD_PROVINCIA < 26
+                                  orderby Provincia.NOM_PROVINCIA
+                                  select new SelectListItem()
+                                  {
+                                      Text = Provincia.NOM_PROVINCIA,
+                                      Value = Provincia.COD_PROVINCIA.ToString()
+                                  }).ToList();
+
+                    provincias.Insert(0, new SelectListItem()
+                    {
+                        Text = "----Elija Provincia----",
+                        Value = string.Empty
+                    });
+
+                    roles = (from Rol in auc.ROL
+                             where Rol.COD_ROL == 3 || Rol.COD_ROL == 5 || Rol.COD_ROL == 6
+                             select new SelectListItem()
+                             {
+                                 Text = Rol.DES_ROL,
+                                 Value = Rol.COD_ROL.ToString(),
+                                 Selected = false
+                             }).ToList();
+
+                    roles.Insert(0, new SelectListItem()
+                    {
+                        Text = "----Elija Rol----",
+                        Value = string.Empty
+                    });
+                    usuarionNew.provincias = provincias;
+                    usuarionNew.roles = roles;
+
+                    break;
+                case 3:
+                    provincias = (from Provincia in auc.PROVINCIA
+                                  where Provincia.COD_PROVINCIA == codigoProvincia
+                                  orderby Provincia.NOM_PROVINCIA
+                                  select new SelectListItem()
+                                  {
+                                      Text = Provincia.NOM_PROVINCIA,
+                                      Value = Provincia.COD_PROVINCIA.ToString()
+                                  }).ToList();
+
+                    roles = (from Rol in auc.ROL
+                             where Rol.COD_ROL == 4
+                             select new SelectListItem()
+                             {
+                                 Text = Rol.DES_ROL,
+                                 Value = Rol.COD_ROL.ToString(),
+                                 Selected = false
+                             }).ToList();
+
+                    usuarionNew.provincias = provincias;
+                    usuarionNew.roles = roles;
+                    break;
+            }
 
             if (!auxiliar.validarCedula(usuarionNew.CEDULAC))
             {
@@ -342,6 +403,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 LOGEO = usuarionNew.LOGEO,
                 MAIL = usuarionNew.MAIL.ToLower(),
                 NOMBRE = usuarionNew.NOMBRE,
+                TELEFONO = usuarionNew.TELEFONO,
                 PROVINCIA = usuarionNew.PROVINCIA,
                 ROL = usuarionNew.ROL
             };
@@ -349,7 +411,7 @@ namespace CoreCRUDwithORACLE.Controllers
             int respuesta = servicioUsuario.IngresaUsuario(usuario);
             if (respuesta > 0)
             {
-                ViewBag.Message = "Usuaria ingresado exitosamente!";
+                ViewBag.Message = "Usuario ingresado exitosamente!";
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -365,6 +427,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 return RedirectToAction("Logout", "Account");
 
             Usuario usuario = servicioUsuario.GetUsuario(cedula);
+            usuario.CLAVE = string.Empty;
             return View(usuario);
         }
         [HttpPost]
@@ -376,20 +439,51 @@ namespace CoreCRUDwithORACLE.Controllers
             //string codRol = usuarioNew.
 
             Usuario usuario = null;
-            if (usuarioNew.COD_ROL == 3)
-                usuario = servicioUsuario.ActualizaClave(usuarioNew, 1);
-            else if (usuarioNew.COD_ROL == 2)
-                usuario = servicioUsuario.ActualizaClave(usuarioNew, 0);
+            
+                
+            
+            usuario = servicioUsuario.ActualizaClave(usuarioNew, 0);
 
             if (usuario != null)
             {
-                ViewBag.Message = "Usuario actualizado exitosamente!";
+                mensaje = "Usuario actualizado exitosamente!";
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "No se pudo actualizar el usuario.");
+                ModelState.AddModelError(string.Empty, "No se pudo actualizar el usuario. Revise la clave.");
                 return View(usuarioNew);
+            }
+        }
+
+        public ActionResult AltaClave(string cedula)
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+
+            Usuario usuario = servicioUsuario.GetUsuario(cedula);
+            usuario.CLAVE = string.Empty;
+            return View(usuario);
+        }
+        [HttpPost]
+        public ActionResult AltaClave(Usuario usuarioAlta)
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+
+            Usuario usuario = null;
+
+            usuario = servicioUsuario.ActualizaClave(usuarioAlta, 1);
+
+            if (usuario != null)
+            {
+                ViewBag.Message = "Usuario actualizado exitosamente!";
+                return RedirectToAction("Logout", "Account");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "No se pudo actualizar el usuario. Revise la contraseña.");
+                return View(usuarioAlta);
             }
         }
     }

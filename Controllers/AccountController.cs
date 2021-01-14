@@ -67,6 +67,7 @@ namespace CoreCRUDwithORACLE.Controllers
             return View();
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
@@ -82,8 +83,8 @@ namespace CoreCRUDwithORACLE.Controllers
                     //if (resultado.Succeeded)
                     HttpContext.Session.SetString("cod_rol", result.COD_ROL.ToString());
                     if (result.EST_CLAVE == 0)
-                        return RedirectToAction("ActualizaClave", new RouteValueDictionary(
-                                                        new { controller = "Usuario", action = "ActualizaClave", cedula = result.CEDULA }));
+                        return RedirectToAction("AltaClave", new RouteValueDictionary(
+                                                        new { controller = "Usuario", action = "AltaClave", cedula = result.CEDULA }));
 
                     
                     HttpContext.Session.SetString("cod_provincia", result.COD_PROVINCIA.ToString());

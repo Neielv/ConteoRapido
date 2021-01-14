@@ -14,6 +14,7 @@ namespace CoreCRUDwithORACLE.Controllers
     {
         IServicioActa servicioActa;
         private readonly IServicioUsuario servicioUsuario;
+        private string mensaje = string.Empty;
 
         public ActaController(IServicioActa _servicioActa, IServicioUsuario _servicioUsuario)
         {
@@ -102,6 +103,8 @@ namespace CoreCRUDwithORACLE.Controllers
 
             int pageSize = 10;
 
+            if (!string.IsNullOrEmpty(mensaje))
+                ViewBag.Message = mensaje;
             //return View(PaginatedList<ActaResponse>.CreateAsync(actas.AsQueryable(), pageNumber ?? 1, pageSize));
             return View(PaginatedList<ActaResponse>.Create(actas.AsQueryable(), pageNumber ?? 1, pageSize));
             //return View(actas.ToList());
@@ -156,6 +159,7 @@ namespace CoreCRUDwithORACLE.Controllers
             if (!String.IsNullOrEmpty(id))
             {
                 ActaResponse acta = servicioActa.GetActa(Convert.ToInt32(id));
+                mensaje = string.Empty;
                 return View(acta);
             }
             return View();
@@ -183,7 +187,10 @@ namespace CoreCRUDwithORACLE.Controllers
 
                     int respuesta = servicioActa.ActualizaActa(collection.COD_USUARIO, collection.COD_JUNTA);
                     if (respuesta > 0)
+                    {
+                        mensaje = "Acta Actualizada";
                         return RedirectToAction(nameof(Index));
+                    }
                     else
                         return View();
                 }
@@ -206,7 +213,10 @@ namespace CoreCRUDwithORACLE.Controllers
             {
                 int respuesta = servicioActa.ActualizaAsignacion(id);
                 if (respuesta > 0)
+                {
+                    mensaje = "Acta Liberada";
                     return RedirectToAction(nameof(Index));
+                }
 
                 ModelState.AddModelError(string.Empty, "Problemas para quitar la asignación revise la información.");
                 return View();
