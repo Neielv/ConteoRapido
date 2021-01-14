@@ -162,7 +162,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 mensaje = string.Empty;
                 return View(acta);
             }
-            return View();
+            return RedirectToAction("Logout", "Account");
         }
 
         // POST: ActaController/Edit/5
@@ -172,6 +172,10 @@ namespace CoreCRUDwithORACLE.Controllers
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
+
+            if (collection== null)
+                return RedirectToAction("Logout", "Account");
+
             try
             {
                 Usuario usuario = servicioUsuario.GetUsuario(collection.CEDULA);

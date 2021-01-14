@@ -66,18 +66,18 @@ namespace CoreCRUDwithORACLE
 
             app.UseAuthorization();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllerRoute(
-            //        name: "default",
-            //        pattern: "{controller=Junta}/{action=Index}/{id?}");
-            //});
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=Login}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllerRoute(
+            //        name: "default",
+            //        pattern: "{controller=Account}/{action=Login}");
+            //});
         }
     }
 }
