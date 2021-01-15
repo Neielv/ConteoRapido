@@ -58,5 +58,56 @@ namespace CoreCRUDwithORACLE.Comunes
 
             return Convert.ToBase64String(hash);
         }
+
+        public bool validarCedula(string cedula)
+        {
+            var cad = cedula;
+            var total = 0;
+            var longitud = cad.Length;
+            var longcheck = longitud - 1;
+            int i;
+
+            if (cad != "" && longitud == 10)
+            {
+                for (i = 0; i < longcheck; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        var aux = Convert.ToInt32(cad.Substring(i, 1)) * 2;
+                        if (aux > 9) aux -= 9;
+                        total += aux;
+                    }
+                    else
+                    {
+                        total += Convert.ToInt32(cad.Substring(i, 1));
+                    }
+                }
+
+
+                if (total % 10 != 0)
+                {
+                    total = 10 - (total % 10);
+                }
+                else
+                {
+                    total = total / 10;
+                }
+                var ok = cad.Substring(longitud - 1, 1);
+                ok = total.ToString();
+
+                if (Convert.ToInt32(cad.Substring(longitud - 1, 1)) == total)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

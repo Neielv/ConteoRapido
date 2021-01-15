@@ -18,13 +18,13 @@ namespace CoreCRUDwithORACLE.Servicios
 
         private string consultaUsuarios = @"SELECT US.COD_USUARIO, PR.COD_PROVINCIA, PR.NOM_PROVINCIA, US.CED_USUARIO || US.DIG_USUARIO CEDULA, US.LOG_USUARIO,
                                                 US.CLA_USUARIO, US.NOM_USUARIO, RO.COD_ROL, RO.DES_ROL, US.EST_USUARIO, 
-                                            US.MAI_USUARIO
+                                            US.MAI_USUARIO, US.TEL_USUARIO
                                            FROM USUARIO US, PROVINCIA PR, ROL RO
                                            WHERE US.COD_PROVINCIA = PR.COD_PROVINCIA
                                            AND US.COD_ROL = RO.COD_ROL";
 
         private string consultaUser = @"SELECT US.COD_USUARIO, PR.COD_PROVINCIA, PR.NOM_PROVINCIA, US.CED_USUARIO || US.DIG_USUARIO CEDULA, US.LOG_USUARIO,
-                                               US.NOM_USUARIO, RO.COD_ROL, RO.DES_ROL, US.EST_USUARIO, US.MAI_USUARIO
+                                               US.TEL_USUARIO, US.NOM_USUARIO, RO.COD_ROL, RO.DES_ROL, US.EST_USUARIO, US.MAI_USUARIO, US.CLA_USUARIO
                                            FROM USUARIO US, PROVINCIA PR, ROL RO
                                            WHERE US.COD_PROVINCIA = PR.COD_PROVINCIA
                                            AND US.COD_ROL = RO.COD_ROL
@@ -36,7 +36,7 @@ namespace CoreCRUDwithORACLE.Servicios
                                         where MAI_USUARIO = '{0}'
                                         and CLA_USUARIO = '{1}'";
 
-        private string consultaUsuario = @"select COD_ROL, NOM_USUARIO, COD_PROVINCIA
+        private string consultaUsuario = @"select COD_ROL, NOM_USUARIO, COD_PROVINCIA, EST_CLA_USUARIO, CED_USUARIO || DIG_USUARIO CEDULA
                                         from USUARIO
                                         where MAI_USUARIO = '{0}'
                                         and CLA_USUARIO = '{1}'";
@@ -47,8 +47,8 @@ namespace CoreCRUDwithORACLE.Servicios
                                            CLA_USUARIO, CED_USUARIO, DIG_USUARIO, NOM_USUARIO, MAI_USUARIO, EST_USUARIO, 
                                            EST_CLA_USUARIO, NIV_USUARIO, COD_PROVINCIA, PRI_LOG_USUARIO, 
                                            INT_LOGIN, TEL_USUARIO, ULT_USUARIO) 
-                                           VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8}, NULL, 0,
-                                             {9}, NULL, NULL, NULL, NULL)";
+                                           VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8}, 0, 0,
+                                             {9}, NULL, NULL, '{10}', NULL)";
 
         private string actualizaUsuario = @"UPDATE CONTEORAPIDO2021.USUARIO
                                             SET    COD_ROL         = {0},
@@ -57,9 +57,15 @@ namespace CoreCRUDwithORACLE.Servicios
                                                    DIG_USUARIO     = '{3}',
                                                    NOM_USUARIO     = '{4}',
                                                    MAI_USUARIO     = '{5}',
-                                                   EST_USUARIO     = {6},
-                                                   COD_PROVINCIA   = {7}
-                                            WHERE  COD_USUARIO     = {8}";
+                                                   EST_USUARIO     = '{6}',
+                                                   COD_PROVINCIA   =  {7},
+                                                   TEL_USUARIO     = '{8}'
+                                            WHERE  COD_USUARIO     = {9}";
+
+        private string actualizaUsuarioClave = @"UPDATE CONTEORAPIDO2021.USUARIO
+                                                    SET    CLA_USUARIO     = '{0}',
+                                                           EST_CLA_USUARIO = '{1}'
+                                                    WHERE  CED_USUARIO     = '{2}'";
         public ServicioUsuario(IConfiguration _configuration)
         {
             _conn = _configuration.GetConnectionString("OracleDBConnection");
@@ -83,18 +89,21 @@ namespace CoreCRUDwithORACLE.Servicios
                         //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
                         switch (codigoRol)
                         {
+                            case 1:
+                                consultaUsuarios += " AND US.COD_ROL = 2 ";
+                                break;
                             case 2:
-                                consultaUsuarios = consultaUsuarios + " AND US.COD_ROL > 2 ";
+                                consultaUsuarios += " AND US.COD_ROL in (3,5) ";
                                 break;
                             case 3:
-                                consultaUsuarios = consultaUsuarios + " AND US.COD_ROL = 4 AND US.COD_PROVINCIA = " + codigoProvincia;
+                                consultaUsuarios += " AND US.COD_ROL = 4 AND US.COD_PROVINCIA = " + codigoProvincia;
                                 break;
                             //case 4:
                             //    consultaUsuarios = consultaUsuarios + " AND US.COD_ROL = 4 ";
                             //    break;
                         }
 
-                        consultaUsuarios = consultaUsuarios + " ORDER BY 1";
+                        consultaUsuarios += " ORDER BY 1";
                         
                         cmd.CommandText = string.Format(consultaUsuarios);
 
@@ -115,7 +124,7 @@ namespace CoreCRUDwithORACLE.Servicios
                                     COD_USUARIO = Convert.ToInt32(odr["COD_USUARIO"]),
                                     NOMBRE = Convert.ToString(odr["nom_usuario"]),
                                     //CLAVE = Convert.ToString(odr["CLA_USUARIO"]),
-                                    //DIGITO = Convert.ToString(odr["DIG_USUARIO"]),
+                                    TELEFONO = Convert.ToString(odr["TEL_USUARIO"]),
                                     MAIL = Convert.ToString(odr["MAI_USUARIO"]),
                                     LOGEO = Convert.ToString(odr["LOG_USUARIO"]),
                                     ESTADO = (Convert.ToString(odr["EST_USUARIO"])=="1"?true:false)
@@ -168,12 +177,13 @@ namespace CoreCRUDwithORACLE.Servicios
                                 usuario.COD_USUARIO = Convert.ToInt32(odr["COD_USUARIO"]);
                                 usuario.CEDULA = Convert.ToString(odr["CEDULA"]);
                                 usuario.COD_PROVINCIA = Convert.ToInt32(odr["COD_PROVINCIA"]);
-                                //usuario.CLAVE = Convert.ToString(odr["CLA_USUARIO"]);
+                                usuario.CLAVE = Convert.ToString(odr["CLA_USUARIO"]);
                                 usuario.ESTADO = (Convert.ToString(odr["EST_USUARIO"]) == "1" ? true : false);
                                 usuario.NOMBRE = Convert.ToString(odr["NOM_USUARIO"]);
                                 usuario.PROVINCIA = Convert.ToString(odr["NOM_PROVINCIA"]);
                                 usuario.LOGEO = Convert.ToString(odr["LOG_USUARIO"]);
                                 usuario.COD_ROL = Convert.ToInt32(odr["COD_ROL"]);
+                                usuario.TELEFONO = Convert.ToString(odr["TEL_USUARIO"]); 
                                 usuario.ROL = Convert.ToString(odr["DES_ROL"]);
                                 usuario.MAIL = Convert.ToString(odr["MAI_USUARIO"]);
                             }
@@ -198,7 +208,7 @@ namespace CoreCRUDwithORACLE.Servicios
 
         public Usuario ActualizaUsuario(UsuarioResponse usuarioActualizado)
         {
-            //string clave = string.Empty;
+            string telefono = usuarioActualizado.TELEFONO;
             Usuario usuario = null;
 
             usuario = GetUsuario(usuarioActualizado.CEDULA);
@@ -217,11 +227,11 @@ namespace CoreCRUDwithORACLE.Servicios
                             cmd.CommandType = CommandType.Text;
                             //cmd.CommandText = "CONSULTA_AUTENTICACION_USUARIO";
 
-                            //clave = _helper.EncodePassword(usuarioActualizado.CLAVE);
+                            //clave = _helper.EncodePassword(usuarioActualizado.CLAVE); 
                             cmd.CommandText = string.Format(actualizaUsuario, usuarioActualizado.CODIGO_ROL, usuarioActualizado.LOGEO,
-                                                            usuarioActualizado.CEDULA, usuarioActualizado.DIGITO, 
-                                                            usuarioActualizado.NOMBRE, usuarioActualizado.MAIL, usuarioActualizado.ESTADO?"1":"0", 
-                                                            usuarioActualizado.CODIGO_PROVINCIA, usuarioActualizado.COD_USUARIO);
+                                                            usuarioActualizado.CEDULA, usuarioActualizado.DIGITO, usuarioActualizado.NOMBRE,
+                                                            usuarioActualizado.MAIL, usuarioActualizado.ESTADO?"1":"0", usuarioActualizado.CODIGO_PROVINCIA,
+                                                            telefono, usuarioActualizado.COD_USUARIO);
 
                             int odr = cmd.ExecuteNonQuery();
 
@@ -232,7 +242,8 @@ namespace CoreCRUDwithORACLE.Servicios
                         }
                         catch (Exception ex)
                         {
-                            return usuario = null;
+                            throw ex;
+                            //return usuario = null;
                         }
                         finally
                         {
@@ -278,7 +289,9 @@ namespace CoreCRUDwithORACLE.Servicios
                                 logeo = new Login()
                                 {
                                     COD_PROVINCIA = Convert.ToInt32(odr["COD_PROVINCIA"]),
-                                    COD_ROL = Convert.ToInt32(odr["COD_ROL"])
+                                    COD_ROL = Convert.ToInt32(odr["COD_ROL"]),
+                                    EST_CLAVE = Convert.ToInt32(odr["EST_CLA_USUARIO"]),
+                                    CEDULA = Convert.ToString(odr["CEDULA"])
                                 };
                             }
                         }
@@ -381,7 +394,7 @@ namespace CoreCRUDwithORACLE.Servicios
 
                         cmd.CommandText = string.Format(ingresaUsuario, usuario.COD_USUARIO, usuario.CODIGO_ROL, usuario.LOGEO,
                                                 _helper.EncodePassword(usuario.CLAVE), usuario.CEDULA.Substring(0,9), usuario.CEDULA.Substring(9, 1),
-                                                usuario.NOMBRE, usuario.MAIL, usuario.ESTADO?"1":"0", usuario.CODIGO_PROVINCIA);
+                                                usuario.NOMBRE, usuario.MAIL, usuario.ESTADO?"1":"0", usuario.CODIGO_PROVINCIA, usuario.TELEFONO);
 
                         respuesta = cmd.ExecuteNonQuery();
                         return respuesta;
@@ -401,6 +414,58 @@ namespace CoreCRUDwithORACLE.Servicios
 
                 }
             }
+        }
+
+        public Usuario ActualizaClave(Usuario usuarioNew, int estado)
+        {
+            Usuario usuario = null;
+            string clave = string.Empty;
+
+            usuario = GetUsuario(usuarioNew.CEDULA);
+
+            if (usuario != null)
+            {
+                clave = _helper.EncodePassword(usuarioNew.CLAVE);
+                if (usuario.CLAVE == clave)
+                    return usuario = null;
+
+                using (OracleConnection con = new OracleConnection(_conn))
+                {
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        try
+                        {
+                            con.Open();
+                            cmd.Connection = con;
+                            //cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.CommandType = CommandType.Text;
+                            //cmd.CommandText = "CONSULTA_AUTENTICACION_USUARIO";
+
+                            
+                            cmd.CommandText = string.Format(actualizaUsuarioClave, clave, estado,
+                                                            usuarioNew.CEDULA.Substring(0,9));
+
+                            int odr = cmd.ExecuteNonQuery();
+
+                            if (odr == 0)
+                                usuario = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            return usuario = null;
+                        }
+                        finally
+                        {
+                            con.Close();
+                            con.Dispose();
+                            cmd.Dispose();
+                        }
+
+                    }
+                }
+            }
+
+            return usuario;
         }
     }
 }

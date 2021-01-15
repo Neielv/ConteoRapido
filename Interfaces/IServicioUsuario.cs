@@ -13,5 +13,6 @@ namespace CoreCRUDwithORACLE.Interfaces
         Usuario ActualizaUsuario(UsuarioResponse usuarioActualizado);
         Login GetAutenticacionUsuario(string iMail, string iPass);
         int IngresaUsuario(UsuarioResponse usuario);
+        Usuario ActualizaClave(Usuario usuarioNew, int estado);
     }
 }

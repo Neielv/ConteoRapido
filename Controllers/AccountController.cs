@@ -4,6 +4,7 @@ using CoreCRUDwithORACLE.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,6 +67,7 @@ namespace CoreCRUDwithORACLE.Controllers
             return View();
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
@@ -80,6 +82,11 @@ namespace CoreCRUDwithORACLE.Controllers
                     //ViewBag.Model = model;
                     //if (resultado.Succeeded)
                     HttpContext.Session.SetString("cod_rol", result.COD_ROL.ToString());
+                    if (result.EST_CLAVE == 0)
+                        return RedirectToAction("AltaClave", new RouteValueDictionary(
+                                                        new { controller = "Usuario", action = "AltaClave", cedula = result.CEDULA }));
+
+                    
                     HttpContext.Session.SetString("cod_provincia", result.COD_PROVINCIA.ToString());
                     ViewBag.CODROL = result.COD_ROL;
                     if (result.COD_ROL == 4)
@@ -95,11 +102,19 @@ namespace CoreCRUDwithORACLE.Controllers
             return View(model);
         }
 
-        [HttpPost]
         public IActionResult Logout()
         {
             //await signInManager.SignOutAsync();
+            HttpContext.Session.SetString("cod_rol", "");
             return RedirectToAction("Login", "Account");
         }
+
+        //[HttpPost]
+        //public IActionResult Logout()
+        //{
+        //    //await signInManager.SignOutAsync();
+        //    HttpContext.Session.SetString("cod_rol", null);
+        //    return RedirectToAction("Login", "Account");
+        //}
     }
 }

@@ -1,4 +1,6 @@
-﻿@model IEnumerable<CoreCRUDwithORACLE.Models.ActaResponse>
+﻿@*@model IEnumerable<CoreCRUDwithORACLE.Models.ActaResponse>*@
+@model CoreCRUDwithORACLE.Comunes.PaginatedList<CoreCRUDwithORACLE.Models.ActaResponse>
+
 
 @{
     ViewData["Title"] = "Index";
@@ -7,16 +9,25 @@
 <h1>Actualización de Asignación de Actas</h1>
 
 @*<form asp-controller="Acta" asp-action="Edit" method="get">
-    <p>
-        Codigo Junta: <input type="text" name="SearchString">
-        <input type="submit" value="Buscar" />
-    </p>
+        <p>
+            Codigo Junta: <input type="text" name="SearchString">
+            <input type="submit" value="Buscar" />
+        </p>
+    </form>*@
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Ingrese Texto: <input type="text" name="textoBuscar" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Buscar" class="btn btn-default btn-light" /> |
+            <a asp-action="Index">Listado Completo</a>
+        </p>
+    </div>
 </form>
-<h1>Listado</h1>*@
+@*<h1>Listado</h1>*@
 
 @*<p>
-    <a asp-action="IngresaUsuario">Asigna Usuario a Acta</a>
-</p>*@
+        <a asp-action="IngresaUsuario">Asigna Usuario a Acta</a>
+    </p>*@
 
 <div asp-validation-summary="All" class="text-danger"></div>
 @if (Model != null)
@@ -24,26 +35,47 @@
     <table class="table">
         <thead>
             <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.COD_USUARIO)
+                    </th>*@
+                @*<th>
+                        @Html.DisplayNameFor(model => model.USUARIO)
+                    </th>*@
                 <th>
-                    @Html.DisplayNameFor(model => model.COD_USUARIO)
+                    USUARIO
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Nom_Provincia)
+                    </th>*@
+                <th>
+                    PROVINCIA
+                </th>
+                @*<th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Nom_Provincia)</a>
+                    </th>*@
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Nom_Canton)
+                    </th>*@
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["CanSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">CANTON</a>
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Nom_Parroquia)
+                    </th>*@
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ParrSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">PARROQUIA</a>
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Nom_Zona)
+                    </th>*@
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ZONA</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Nom_Provincia)
+                    JUNTA
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Nom_Canton)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nom_Parroquia)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nom_Zona)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.junta)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.sexo)
+                    SEXO
                 </th>
                 @*<th>
                         @Html.DisplayNameFor(model => model.VOT_JUNTA)
@@ -61,8 +93,11 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.COD_USUARIO)
+                        </td>*@
                     <td>
-                        @Html.DisplayFor(modelItem => item.COD_USUARIO)
+                        @Html.DisplayFor(modelItem => item.USUARIO)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Nom_Provincia)
@@ -90,18 +125,47 @@
                         </td>*@
 
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.COD_JUNTA })
-                        @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                        @Html.ActionLink("Asignar", "Edit", new { id = item.COD_JUNTA }) |
+                        @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+                        @if (item.COD_USUARIO != 0)
+                        {
+                            @Html.ActionLink("Quitar", "Delete", new { id = item.COD_JUNTA })
+                        }
                     </td>
 
                 </tr>
             }
         </tbody>
     </table>
+
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
 }
 
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+}
 <div>
     <a asp-controller="Home" asp-action="Index">Regresar al Inicio || </a>
-    <a asp-controller="Account" asp-action="Login">Salir</a>
+    <a asp-controller="Account" asp-action="Logout">Salir</a>
 </div>

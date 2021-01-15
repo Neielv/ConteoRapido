@@ -4,6 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
+
+
 <h1>Gestión de Usuarios</h1>
 @if (ViewBag.CODROL != 4)
 {
@@ -11,6 +13,8 @@
         <a asp-action="IngresaUsuario">Crear nuevo usuario</a>
     </p>
 }
+
+
 <div asp-validation-summary="All" class="text-danger"></div>
 @if (Model != null)
 {
@@ -27,22 +31,19 @@
                     @Html.DisplayNameFor(model => model.CEDULA)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DIGITO)
-                </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.CLAVE)
-                    </th>*@
-                <th>
                     @Html.DisplayNameFor(model => model.NOMBRE)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ROL)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ESTADO)
+                    @Html.DisplayNameFor(model => model.TELEFONO)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.MAIL)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ESTADO)
                 </th>
                 <th></th>
             </tr>
@@ -60,11 +61,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.CEDULA)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DIGITO)
-                    </td>
+
                     @*<td>
-                            @Html.DisplayFor(modelItem => item.CLAVE)
+                            @Html.DisplayFor(modelItem => item.)
                         </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.NOMBRE)
@@ -73,17 +72,20 @@
                         @Html.DisplayFor(modelItem => item.ROL)
                     </td>
                     <td>
-                        @Html.CheckBoxFor(modelItem => item.ESTADO, new { @disabled = "disabled" })
+                        @Html.DisplayFor(modelItem => item.TELEFONO)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.MAIL)
                     </td>
+                    <td>
+                        @Html.CheckBoxFor(modelItem => item.ESTADO, new { @disabled = "disabled" })
+                    </td>
                     @if (ViewBag.CODROL != 4)
                     {
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.CEDULA })
-                            @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                            @Html.ActionLink("Editar", "Edit", new { id = item.CEDULA }) |
+                            @Html.ActionLink("Actualizar Clave", "ActualizaClave", new { cedula = item.CEDULA })
+                            @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
                         </td>
                     }
                 </tr>
@@ -91,7 +93,15 @@
         </tbody>
     </table>
 }
+@if (ViewBag.Message != null)
+{
+    <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+    </script>
+}
 <div>
     <a asp-controller="Home" asp-action="Index">Regresar al Inicio | </a>
-    <a asp-controller="Account" asp-action="Login">Salir</a>
+    <a asp-controller="Account" asp-action="Logout">Salir</a>
 </div>
