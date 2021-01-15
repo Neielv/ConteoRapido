@@ -1,0 +1,62 @@
+﻿@model IEnumerable<CoreCRUDwithORACLE.ViewModels.Reportes.AOperadoresParroquia>
+
+@{
+    ViewData["Title"] = "OperadoresParroquia";
+}
+
+<h1>Operadores por Parroquia</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.operadoresCanton.operadoresProvincia.COD_PROV)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.operadoresCanton.operadoresProvincia.PROVINCIA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.operadoresCanton.CANTON)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PARROQUIA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.operadoresCanton.operadoresProvincia.JUNTAS)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.operadoresCanton.operadoresProvincia.OPERADORES)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.operadoresCanton.COD_CANTON)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.operadoresCanton.operadoresProvincia.PROVINCIA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.operadoresCanton.CANTON)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PARROQUIA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.operadoresCanton.operadoresProvincia.JUNTAS)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.operadoresCanton.operadoresProvincia.OPERADORES)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-controller="Home" asp-action="Index">Regresar al Inicio | </a>
+    <a asp-controller="Account" asp-action="Logout">Salir</a>
+</div>

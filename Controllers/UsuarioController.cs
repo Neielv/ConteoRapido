@@ -31,11 +31,15 @@ namespace CoreCRUDwithORACLE.Controllers
         }
         public IActionResult Index()
         {
+
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
             IEnumerable<Usuario> usuarios = servicioUsuario.GetUsuarios(Convert.ToInt32(HttpContext.Session.GetString("cod_rol")),
-                                                                        Convert.ToInt32(HttpContext.Session.GetString("cod_provincia")));
+                                                                    Convert.ToInt32(HttpContext.Session.GetString("cod_provincia")));
             if (usuarios == null)
             {
                 ModelState.AddModelError(string.Empty, "No existen usuarios");
@@ -50,10 +54,13 @@ namespace CoreCRUDwithORACLE.Controllers
 
         public ActionResult Edit(string id)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
-            if(string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id))
                 return RedirectToAction("Logout", "Account");
 
             int codigoRol = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
@@ -62,7 +69,11 @@ namespace CoreCRUDwithORACLE.Controllers
             Usuario usuario = servicioUsuario.GetUsuario(id);
 
             if (usuario == null)
-                return View();
+            {
+                ModelState.AddModelError(string.Empty, "Información de usuario incorrecta.");
+                return RedirectToAction("Logout", "Account");
+            }
+
 
             UsuarioViewModel usuarioViewModel = new UsuarioViewModel();
             usuarioViewModel.CEDULA = usuario.CEDULA;
@@ -103,10 +114,13 @@ namespace CoreCRUDwithORACLE.Controllers
         [HttpPost]
         public ActionResult Edit(UsuarioViewModel usuarioMod)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
-            if (usuarioMod==null)
+            if (usuarioMod == null)
                 return RedirectToAction("Logout", "Account");
 
             var provincias = (from Provincia in auc.PROVINCIA
@@ -190,6 +204,9 @@ namespace CoreCRUDwithORACLE.Controllers
         }
         public ActionResult IngresaUsuario()
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
@@ -290,6 +307,9 @@ namespace CoreCRUDwithORACLE.Controllers
         [HttpPost]
         public ActionResult IngresaUsuario(UsuarioViewModel usuarionNew)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
@@ -432,6 +452,9 @@ namespace CoreCRUDwithORACLE.Controllers
         [Route("Usuario/ActualizaClave/{cedula}")]
         public ActionResult ActualizaClave(string cedula)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
@@ -439,6 +462,10 @@ namespace CoreCRUDwithORACLE.Controllers
                 return RedirectToAction("Logout", "Account");
 
             Usuario usuario = servicioUsuario.GetUsuario(cedula);
+
+            if (usuario == null)
+                return RedirectToAction("Logout", "Account");
+
             usuario.CLAVE = string.Empty;
             return View(usuario);
         }
@@ -454,9 +481,9 @@ namespace CoreCRUDwithORACLE.Controllers
             //string codRol = usuarioNew.
 
             Usuario usuario = null;
-            
-                
-            
+
+
+
             usuario = servicioUsuario.ActualizaClave(usuarioNew, 0);
 
             if (usuario != null)
@@ -473,6 +500,9 @@ namespace CoreCRUDwithORACLE.Controllers
         [Route("Usuario/AltaClave/{cedula}")]
         public ActionResult AltaClave(string cedula)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
@@ -480,9 +510,14 @@ namespace CoreCRUDwithORACLE.Controllers
                 return RedirectToAction("Logout", "Account");
 
             Usuario usuario = servicioUsuario.GetUsuario(cedula);
+
+            if (usuario == null)
+                return RedirectToAction("Logout", "Account");
+
             usuario.CLAVE = string.Empty;
             return View(usuario);
         }
+        [Route("Usuario/AltaClave/{cedula}")]
         [HttpPost]
         public ActionResult AltaClave(Usuario usuarioAlta)
         {

@@ -1,8 +1,10 @@
 using CoreCRUDwithORACLE.Interfaces;
 using CoreCRUDwithORACLE.Models;
 using CoreCRUDwithORACLE.Servicios;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,13 +29,19 @@ namespace CoreCRUDwithORACLE
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+
             //services.AddIdentity<IdentityUser, IdentityRole>();
             services.AddDbContext<ApplicationUser>(options => options.UseOracle(Configuration.GetConnectionString("OracleDBConnection")));
             services.AddControllersWithViews();
             services.AddTransient<IServicioJunta, ServicioJunta>();
             services.AddTransient<IServicioUsuario, ServicioUsuario>();
             services.AddTransient<IServicioActa, ServicioActa>();
+            services.AddTransient<IServicioReportes, ServicioReportes>();
             //services.AddControllersWithViews();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddMvc().AddRazorPagesOptions(options => {
@@ -64,6 +72,7 @@ namespace CoreCRUDwithORACLE
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
