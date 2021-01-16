@@ -291,7 +291,8 @@ namespace CoreCRUDwithORACLE.Servicios
                                     COD_PROVINCIA = Convert.ToInt32(odr["COD_PROVINCIA"]),
                                     COD_ROL = Convert.ToInt32(odr["COD_ROL"]),
                                     EST_CLAVE = Convert.ToInt32(odr["EST_CLA_USUARIO"]),
-                                    CEDULA = Convert.ToString(odr["CEDULA"])
+                                    CEDULA = Convert.ToString(odr["CEDULA"]),
+                                    NOMBRE = Convert.ToString(odr["NOM_USUARIO"])
                                 };
                             }
                         }

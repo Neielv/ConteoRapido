@@ -75,7 +75,7 @@
                             <img src="~/FrontEnd/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                         </div>
                         <div class="info">
-                            <a href="#" class="d-block">Nombre de usuario</a>
+                            <a href="#" class="d-block">@User.Identity.Name</a>
                         </div>
                     </div>
 
@@ -83,7 +83,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                            with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
 
                             <li class="nav-item">
                                 <a asp-action="index" asp-controller="Usuario" class="nav-link">
@@ -105,10 +105,18 @@
                             </li>
 
                             <li class="nav-item">
-                                <a asp-action="index" asp-controller="Reportes" class="nav-link">                               
+                                <a asp-action="index" asp-controller="Reportes" class="nav-link">
                                     <i class="nav-icon fas fa-th"></i>
                                     <p>
-                                        Reporte ssss
+                                        Reporte Actas Asignadas
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-action="TransmitidasProvincia" asp-controller="Reportes" class="nav-link">
+                                    <i class="nav-icon fas fa-th"></i>
+                                    <p>
+                                        Reporte Actas Transmitidas
                                     </p>
                                 </a>
                             </li>

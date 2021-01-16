@@ -90,7 +90,7 @@ namespace CoreCRUDwithORACLE.Comunes
                 }
                 else
                 {
-                    total = total / 10;
+                    total = 0;
                 }
                 var ok = cad.Substring(longitud - 1, 1);
                 ok = total.ToString();

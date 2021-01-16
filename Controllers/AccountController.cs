@@ -85,7 +85,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 {
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, model.Email),
+                        new Claim(ClaimTypes.Name, result.NOMBRE),
                         new Claim("FullName", result.CEDULA),
                         new Claim(ClaimTypes.Role, "Administrator"),
                     };
