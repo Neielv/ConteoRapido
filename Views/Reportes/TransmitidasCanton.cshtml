@@ -1,10 +1,10 @@
-﻿@model IEnumerable<CoreCRUDwithORACLE.ViewModels.Reportes.ATransmitidasProvincia>
+﻿@model IEnumerable<CoreCRUDwithORACLE.ViewModels.Reportes.ATransmitidasCanton>
 
 @{
-    ViewData["Title"] = "TransmitidasProvincia";
+    ViewData["Title"] = "TransmitidasCanton";
 }
 
-<h1>Actas Transmitidas por Provincia</h1>
+<h1>Actas Transmitidas por Canton</h1>
 
 <div asp-validation-summary="All" class="text-danger"></div>
 @if (Model != null)
@@ -14,10 +14,16 @@
             <thead>
                 <tr>
                     <th>
+                        @Html.DisplayNameFor(model => model.CODIGO_PROVINCIA)
+                    </th>
+                    <th>
                         @Html.DisplayNameFor(model => model.CODIGO)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.PROVINCIA)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CANTON)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.JUNTAS)
@@ -33,10 +39,16 @@
                 {
                     <tr>
                         <td>
+                            @Html.DisplayFor(modelItem => item.CODIGO_PROVINCIA)
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.CODIGO)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.PROVINCIA)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CANTON)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.JUNTAS)
@@ -44,11 +56,11 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.TRANSMITIDAS)
                         </td>
-                        <td>
-                            @Html.ActionLink("Cantón", "TransmitidasCanton", new { codProvincia = item.CODIGO  }) @*|
+                        @*<td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                             @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-                        </td>
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        </td>*@
                     </tr>
                 }
             </tbody>

@@ -196,7 +196,7 @@ namespace CoreCRUDwithORACLE.Controllers
 
             return View(operadoresDetalle);
         }
-        [Route("Reportes/DetalleOpTransmitidasProvinciaeradores")]
+        [Route("Reportes/TransmitidasProvincia")]
         public async Task<IActionResult> TransmitidasProvincia()
         {
             if (!User.Identity.IsAuthenticated)
@@ -219,6 +219,30 @@ namespace CoreCRUDwithORACLE.Controllers
             }
 
             return View(transmitidasProvincias);
+        }
+        [Route("Reportes/TransmitidasCanton/{codProvincia}")]
+        public async Task<IActionResult> TransmitidasCanton(int codProvincia)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
+
+            IEnumerable<ATransmitidasCanton> transmitidasCanton = null;
+            
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codProvincia == 0)
+                transmitidasCanton = await servicioReportes.TransmitidasCanton();
+            else
+                transmitidasCanton = await servicioReportes.TransmitidasCanton(codProvincia);
+
+            if ((transmitidasCanton == null) || (transmitidasCanton.Count() == 0))
+            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
+                return View();
+            }
+
+            return View(transmitidasCanton);
         }
     }
 }

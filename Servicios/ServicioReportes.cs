@@ -24,6 +24,7 @@ namespace CoreCRUDwithORACLE.Servicios
         private string sOperadoresParroquia = @"SELECT * FROM CONTEORAPIDO2021.ASIGOPERADORESPARROQUIA";
         private string sOperadoresDetalle = @"SELECT * FROM CONTEORAPIDO2021.DETALLEOPERADORES";
         private string sTransmitidasProvincia = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSPROV";
+        private string sTransmitidasCanton = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSCANTON";
 
         public async Task<IEnumerable<AOperadoresProvincia>> OperadoresProvincia(int? codigoProvincia = null)
         {
@@ -317,6 +318,63 @@ namespace CoreCRUDwithORACLE.Servicios
             }
 
             return transmitidasProvincia;
+        }
+        public async Task<IEnumerable<ATransmitidasCanton>> TransmitidasCanton(int? codigoProvincia = null)
+        {
+            List<ATransmitidasCanton> transmitidasCanton = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoProvincia.HasValue)
+                            sTransmitidasCanton += " WHERE CODIGO_PROVINCIA = " + codigoProvincia.ToString();
+
+                        cmd.CommandText = string.Format(sTransmitidasCanton);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            transmitidasCanton = new List<ATransmitidasCanton>();
+                            while (odr.Read())
+                            {
+                                ATransmitidasCanton tCanton = new ATransmitidasCanton
+                                {
+                                    CODIGO_PROVINCIA = Convert.ToInt32(odr["CODIGO_PROVINCIA"]),
+                                    CODIGO = Convert.ToInt32(odr["CODIGO"]),
+                                    PROVINCIA = Convert.ToString(odr["PROVINCIA"]),
+                                    CANTON = Convert.ToString(odr["CANTON"]),
+                                    JUNTAS = Convert.ToInt32(odr["JUNTAS"]),
+                                    TRANSMITIDAS = Convert.ToInt32(odr["TRANSMITIDAS"])
+                                };
+                                transmitidasCanton.Add(tCanton);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return transmitidasCanton;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return transmitidasCanton;
         }
     }
 }

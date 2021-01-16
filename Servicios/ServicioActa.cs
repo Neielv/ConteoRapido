@@ -53,7 +53,9 @@ namespace CoreCRUDwithORACLE.Servicios
                         //cmd.CommandType = CommandType.StoredProcedure;
                         cmd.CommandType = CommandType.Text;
                         //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
-                        consultaActas = consultaActas + " AND J.COD_PROVINCIA = {0} ";
+                        if (codigoProvincia != 0)
+                            consultaActas = consultaActas + " AND J.COD_PROVINCIA = {0} ";
+
                         cmd.CommandText = string.Format(consultaActas, codigoProvincia);
                         cmd.BindByName = true;
 
