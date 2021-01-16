@@ -1,5 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,14 +30,14 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
-    @if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+    @if (ViewBag.CODROL == null && Model==null)
     {
         <div class="login-page">
             @RenderBody()
         </div>
 
     }
-    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+    @if (ViewBag.CODROL != null || Model != null)
     {
         <div class="wrapper">
 

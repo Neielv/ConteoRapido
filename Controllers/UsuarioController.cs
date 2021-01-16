@@ -483,6 +483,7 @@ namespace CoreCRUDwithORACLE.Controllers
             usuario.CLAVE = string.Empty;
             return View(usuario);
         }
+        [Route("Usuario/AltaClave/{cedula}")]
         [HttpPost]
         public ActionResult AltaClave(Usuario usuarioAlta)
         {
