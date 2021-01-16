@@ -14,7 +14,7 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.operadoresCanton.COD_CANTON)
+                        @Html.DisplayNameFor(model => model.PCODIGO)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.operadoresCanton.operadoresProvincia.PROVINCIA)
@@ -31,6 +31,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.operadoresCanton.operadoresProvincia.OPERADORES)
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +39,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.operadoresCanton.COD_CANTON)
+                            @Html.DisplayFor(modelItem => item.PCODIGO)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.operadoresCanton.operadoresProvincia.PROVINCIA)
@@ -54,6 +55,9 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.operadoresCanton.operadoresProvincia.OPERADORES)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Detalle", "DetalleOperadores", new { codParroquia = item.PCODIGO })
                         </td>
                     </tr>
                 }

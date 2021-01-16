@@ -171,5 +171,54 @@ namespace CoreCRUDwithORACLE.Controllers
 
             return View(operadoresParroquia);
         }
+
+        [Route("Reportes/DetalleOperadores/{codParroquia}")]
+        public async Task<IActionResult> DetalleOperadores(int codParroquia)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
+
+            IEnumerable<DetalleOperadores> operadoresDetalle = null;
+            //int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codParroquia == 0)
+                operadoresDetalle = await servicioReportes.OperadoresDetalle();
+            else
+                operadoresDetalle = await servicioReportes.OperadoresDetalle(codParroquia);
+
+            if ((operadoresDetalle == null) || (operadoresDetalle.Count() == 0))
+            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
+                return View();
+            }
+
+            return View(operadoresDetalle);
+        }
+        [Route("Reportes/DetalleOpTransmitidasProvinciaeradores")]
+        public async Task<IActionResult> TransmitidasProvincia()
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
+
+            IEnumerable<ATransmitidasProvincia> transmitidasProvincias = null;
+            int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codigoProvincia == 0)
+                transmitidasProvincias = await servicioReportes.TransmitidasProvincia();
+            else
+                transmitidasProvincias = await servicioReportes.TransmitidasProvincia(codigoProvincia);
+
+            if ((transmitidasProvincias == null) || (transmitidasProvincias.Count() == 0))
+            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
+                return View();
+            }
+
+            return View(transmitidasProvincias);
+        }
     }
 }

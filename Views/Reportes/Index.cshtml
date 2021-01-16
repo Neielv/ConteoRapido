@@ -60,12 +60,12 @@
                             @Html.DisplayFor(modelItem => item.OPERADORES)
                         </td>
                         <td>
-                            @if (item.OPERADORES > 0)
-                            {
+                            @*@if (item.OPERADORES > 0)
+                            {*@
                                 @Html.ActionLink("Canton", "OperadoresCanton", new { codProvincia = item.COD_PROV })
                                 @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                                     @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-                            }
+                                @*}*@
                         </td>
                     </tr>
                 }

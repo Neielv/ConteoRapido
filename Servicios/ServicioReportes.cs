@@ -22,6 +22,8 @@ namespace CoreCRUDwithORACLE.Servicios
         private string sOperadoresProvincia = @"SELECT * FROM CONTEORAPIDO2021.ASIGOPERADORESPORPROVINCIA";
         private string sOperadoresCanton = @"SELECT * FROM CONTEORAPIDO2021.ASIGOPERADORESPORCANTON";
         private string sOperadoresParroquia = @"SELECT * FROM CONTEORAPIDO2021.ASIGOPERADORESPARROQUIA";
+        private string sOperadoresDetalle = @"SELECT * FROM CONTEORAPIDO2021.DETALLEOPERADORES";
+        private string sTransmitidasProvincia = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSPROV";
 
         public async Task<IEnumerable<AOperadoresProvincia>> OperadoresProvincia(int? codigoProvincia = null)
         {
@@ -168,6 +170,7 @@ namespace CoreCRUDwithORACLE.Servicios
                             {
                                 AOperadoresParroquia operadorParroquia = new AOperadoresParroquia
                                 {
+                                    PCODIGO = Convert.ToInt32(odr["CODIGO"]),
                                     PARROQUIA = Convert.ToString(odr["NOM_PARROQUIA"]),
                                     operadoresCanton = new AOperadoresCanton()
                                     {
@@ -200,6 +203,120 @@ namespace CoreCRUDwithORACLE.Servicios
             }
 
             return operadoresParroquias;
+        }
+        public async Task<IEnumerable<DetalleOperadores>> OperadoresDetalle(int? codigoParroquia = null)
+        {
+            List<DetalleOperadores> operadoresDetalles = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoParroquia.HasValue)
+                            sOperadoresDetalle += " WHERE CODIGO = " + codigoParroquia.ToString();
+
+                        cmd.CommandText = string.Format(sOperadoresDetalle);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            operadoresDetalles = new List<DetalleOperadores>();
+                            while (odr.Read())
+                            {
+                                DetalleOperadores operador = new DetalleOperadores
+                                {
+                                    CODIGO = Convert.ToInt32(odr["CODIGO"]),
+                                    PARROQUIA = Convert.ToString(odr["PARROQUIA"]),
+                                    CCANTON = Convert.ToInt32(odr["CCANTON"]),
+                                    CANTON = Convert.ToString(odr["CANTON"]),
+                                    PROVINCIA = Convert.ToString(odr["PROVINCIA"]),
+                                    JUNTA = Convert.ToInt32(odr["JUNTA"]),
+                                    USUARIO = Convert.ToString(odr["USUARIO"]),
+                                    TELEFONO = Convert.ToString(odr["TELEFONO"])
+                                };
+                                operadoresDetalles.Add(operador);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return operadoresDetalles;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return operadoresDetalles;
+        }
+        public async Task<IEnumerable<ATransmitidasProvincia>> TransmitidasProvincia(int? codigoProvincia = null)
+        {
+            List<ATransmitidasProvincia> transmitidasProvincia = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoProvincia.HasValue)
+                            sTransmitidasProvincia += " WHERE CODIGO = " + codigoProvincia.ToString();
+
+                        cmd.CommandText = string.Format(sTransmitidasProvincia);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            transmitidasProvincia = new List<ATransmitidasProvincia>();
+                            while (odr.Read())
+                            {
+                                ATransmitidasProvincia tProvincia = new ATransmitidasProvincia
+                                {
+                                    CODIGO = Convert.ToInt32(odr["CODIGO"]),
+                                    PROVINCIA = Convert.ToString(odr["PROVINCIA"]),
+                                    JUNTAS = Convert.ToInt32(odr["JUNTAS"]),
+                                    TRANSMITIDAS = Convert.ToInt32(odr["TRANSMITIDAS"])
+                                };
+                                transmitidasProvincia.Add(tProvincia);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return transmitidasProvincia;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return transmitidasProvincia;
         }
     }
 }

@@ -61,6 +61,12 @@ namespace CoreCRUDwithORACLE.Controllers
 
             var actas = servicioActa.GetActas(Convert.ToInt32(HttpContext.Session.GetString("cod_provincia")));
 
+            if (actas == null)
+            {
+                ModelState.AddModelError(string.Empty, "No existe información.");
+                return View();
+            }
+
             if (!String.IsNullOrEmpty(textoBuscar))
             {
                 if (Int32.TryParse(textoBuscar, out number))
