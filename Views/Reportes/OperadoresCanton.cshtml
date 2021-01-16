@@ -6,60 +6,65 @@
 
 <h1>Operadores por Canton</h1>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.operadoresProvincia.COD_PROV)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CANTON)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.operadoresProvincia.PROVINCIA)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.operadoresProvincia.JUNTAS)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.operadoresProvincia.OPERADORES)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            @Html.HiddenFor(modelitem => item.COD_CANTON)
-            <td>
-                @Html.DisplayFor(modelItem => item.operadoresProvincia.COD_PROV)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CANTON)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.operadoresProvincia.PROVINCIA)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.operadoresProvincia.JUNTAS)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.operadoresProvincia.OPERADORES)
-            </td>
-            <td>
-                @if (item.operadoresProvincia.OPERADORES > 0)
+<div asp-validation-summary="All" class="text-danger"></div>
+@if (Model != null)
+{
+    <div class="form-group">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.operadoresProvincia.COD_PROV)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CANTON)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.operadoresProvincia.PROVINCIA)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.operadoresProvincia.JUNTAS)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.operadoresProvincia.OPERADORES)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
                 {
-                    @Html.ActionLink("Parroquias", "OperadoresParroquia", new { codCanton = item.COD_CANTON  })
+                    <tr>
+                        @Html.HiddenFor(modelitem => item.COD_CANTON)
+                        <td>
+                            @Html.DisplayFor(modelItem => item.operadoresProvincia.COD_PROV)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CANTON)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.operadoresProvincia.PROVINCIA)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.operadoresProvincia.JUNTAS)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.operadoresProvincia.OPERADORES)
+                        </td>
+                        <td>
+                            @if (item.operadoresProvincia.OPERADORES > 0)
+                            {
+                                @Html.ActionLink("Parroquias", "OperadoresParroquia", new { codCanton = item.COD_CANTON })
+                            }
+                            @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                        </td>
+                    </tr>
                 }
-                @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+}
 <div>
     <a asp-controller="Home" asp-action="Index">Regresar al Inicio | </a>
     <a asp-controller="Account" asp-action="Logout">Salir</a>

@@ -144,7 +144,7 @@ namespace CoreCRUDwithORACLE.Controllers
             }
 
             ModelState.AddModelError(string.Empty, "Intento de ingreso inválido");
-            return View(model);
+            return View();
         }
 
         public async Task<IActionResult> Logout()

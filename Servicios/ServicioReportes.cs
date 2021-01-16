@@ -40,7 +40,7 @@ namespace CoreCRUDwithORACLE.Servicios
                         //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
 
                         if (codigoProvincia.HasValue)
-                            sOperadoresProvincia += " WHERE COD_PROVINCIA = " + codigoProvincia.ToString();
+                            sOperadoresProvincia += " WHERE CODIGO = " + codigoProvincia.ToString();
 
                         cmd.CommandText = string.Format(sOperadoresProvincia);
 
