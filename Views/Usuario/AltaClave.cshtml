@@ -7,37 +7,59 @@
 <h1>Habilitar a usuario</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="AltaClave">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="COD_USUARIO" class="control-label"></label>
-                <input asp-for="COD_USUARIO" class="form-control" readonly />
-                <span asp-validation-for="COD_USUARIO" class="text-danger"></span>
-            </div>
-            @Html.HiddenFor(m => m.CEDULA)
-            <div class="form-group">
-                <label asp-for="NOMBRE" class="control-label"></label>
-                <input asp-for="NOMBRE" class="form-control" readonly />
-                <span asp-validation-for="NOMBRE" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CLAVE" class="control-label"></label>
-                <input asp-for="CLAVE" class="form-control" />
-                <span asp-validation-for="CLAVE" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div id="wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                   
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Cambio de clave</h3>
+                        </div>
+                        <div class="card-body">
+                            <form asp-action="AltaClave">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group" hidden="hidden">
+                                    <label asp-for="COD_USUARIO" class="control-label"></label>
+                                    <input asp-for="COD_USUARIO" class="form-control" readonly />
+                                    <span asp-validation-for="COD_USUARIO" class="text-danger"></span>
+                                </div>
+                                @Html.HiddenFor(m => m.CEDULA)
+                                <div class="form-group">
+                                    <label asp-for="NOMBRE" class="control-label"></label>
+                                    <input asp-for="NOMBRE" class="form-control" readonly />
+                                    <span asp-validation-for="NOMBRE" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CLAVE" class="control-label"></label>
+                                    <input asp-for="CLAVE" class="form-control" />
+                                    <span asp-validation-for="CLAVE" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <table>
+                                        <tr>
+                                            <th>
+                                                <input type="submit" value="Guardar" class="btn btn-primary" />
+                                            </th>
+                                            <th>
+                                                <a asp-controller="Account" asp-action="Logout" class="btn btn-block btn-danger">Salir</a>
+                                            </th>
+                                            
+                                        </tr>
+                                    </table>
+                                    
+                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 </div>
+                </div>
+            </div>
+       </section>
+       </div>
 
-<div>
-    <a asp-controller="Account" asp-action="Logout">Salir</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+                    @section Scripts {
+                        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+                    }

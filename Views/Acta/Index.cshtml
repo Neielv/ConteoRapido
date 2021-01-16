@@ -8,164 +8,173 @@
 
 <h1>Actualización de Asignación de Actas</h1>
 
-@*<form asp-controller="Acta" asp-action="Edit" method="get">
-        <p>
-            Codigo Junta: <input type="text" name="SearchString">
-            <input type="submit" value="Buscar" />
-        </p>
-    </form>*@
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Ingrese Texto: <input type="text" name="textoBuscar" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Buscar" class="btn btn-default btn-light" /> |
-            <a asp-action="Index">Listado Completo</a>
-        </p>
-    </div>
-</form>
-@*<h1>Listado</h1>*@
 
-@*<p>
-        <a asp-action="IngresaUsuario">Asigna Usuario a Acta</a>
-    </p>*@
 
-<div asp-validation-summary="All" class="text-danger"></div>
-@if (Model != null)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.COD_USUARIO)
-                    </th>*@
-                @*<th>
-                        @Html.DisplayNameFor(model => model.USUARIO)
-                    </th>*@
-                <th>
-                    USUARIO
-                </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.Nom_Provincia)
-                    </th>*@
-                <th>
-                    PROVINCIA
-                </th>
-                @*<th>
-                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Nom_Provincia)</a>
-                    </th>*@
-                @*<th>
-                        @Html.DisplayNameFor(model => model.Nom_Canton)
-                    </th>*@
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["CanSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">CANTON</a>
-                </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.Nom_Parroquia)
-                    </th>*@
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ParrSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">PARROQUIA</a>
-                </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.Nom_Zona)
-                    </th>*@
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ZONA</a>
-                </th>
-                <th>
-                    JUNTA
-                </th>
-                <th>
-                    SEXO
-                </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.VOT_JUNTA)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.BLA_JUNTA)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.NUL_JUNTA)
-                    </th>*@
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.COD_USUARIO)
-                        </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.USUARIO)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nom_Provincia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nom_Canton)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nom_Parroquia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nom_Zona)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.junta)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.sexo)
-                    </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.ESTADO)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.MAIL)
-                        </td>*@
 
-                    <td>
-                        @Html.ActionLink("Asignar", "Edit", new { id = item.COD_JUNTA }) |
-                        @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
-                        @if (item.COD_USUARIO != 0)
-                        {
-                            @Html.ActionLink("Quitar", "Delete", new { id = item.COD_JUNTA })
-                        }
-                    </td>
+<div id="wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">                   
+                    <table>
+                        <tr>   
+                          
+                            <th> <a asp-controller="Home" asp-action="Index" class="btn btn-block btn-secondary">  Ir al Inicio </a></th>
+                            <th> <a asp-controller="Account" asp-action="Logout" class="btn btn-block btn-danger">Salir</a></th>
+                        </tr>
+                    </table>
 
-                </tr>
-            }
-        </tbody>
-    </table>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    @if (Model != null)
+                    {
+                        <div class="card">
+                            <div class="card-header">
+                                <form asp-action="Index" method="get">
+                                    <div class="form-actions no-color">
+                                        <p>
+                                            Ingrese Texto: <input type="text" name="textoBuscar" value="@ViewData["CurrentFilter"]" />
+                                            <input type="submit" value="Buscar" class="btn btn-default btn-light" /> |
+                                            <a asp-action="Index">Listado Completo</a>
+                                        </p>
+                                    </div>
+                                </form>
+                                <div asp-validation-summary="All" class="text-danger"></div>
 
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
 
-    <a asp-action="Index"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-pageNumber="@(Model.PageIndex - 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-default @prevDisabled">
-        Previous
-    </a>
-    <a asp-action="Index"
-       asp-route-sortOrder="@ViewData["CurrentSort"]"
-       asp-route-pageNumber="@(Model.PageIndex + 1)"
-       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-default @nextDisabled">
-        Next
-    </a>
-}
 
-@if (ViewBag.Message != null)
-{
-    <script type="text/javascript">
-            window.onload = function () {
-                alert("@ViewBag.Message");
-            };
-    </script>
-}
-<div>
-    <a asp-controller="Home" asp-action="Index">Regresar al Inicio || </a>
-    <a asp-controller="Account" asp-action="Logout">Salir</a>
+                                @if (Model != null)
+                                {
+                                    <table id="Juntas" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                @*<th>
+                            @Html.DisplayNameFor(model => model.COD_USUARIO)
+                        </th>*@
+                                                @*<th>
+                            @Html.DisplayNameFor(model => model.USUARIO)
+                        </th>*@
+                                                <th>
+                                                    USUARIO
+                                                </th>
+                                                @*<th>
+                            @Html.DisplayNameFor(model => model.Nom_Provincia)
+                        </th>*@
+                                                <th>
+                                                    PROVINCIA
+                                                </th>
+                                                @*<th>
+                            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Nom_Provincia)</a>
+                        </th>*@
+                                                @*<th>
+                            @Html.DisplayNameFor(model => model.Nom_Canton)
+                        </th>*@
+                                                <th>
+                                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["CanSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">CANTON</a>
+                                                </th>
+                                                @*<th>
+                            @Html.DisplayNameFor(model => model.Nom_Parroquia)
+                        </th>*@
+                                                <th>
+                                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ParrSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">PARROQUIA</a>
+                                                </th>
+                                                @*<th>
+                            @Html.DisplayNameFor(model => model.Nom_Zona)
+                        </th>*@
+                                                <th>
+                                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ZONA</a>
+                                                </th>
+                                                <th>
+                                                    JUNTA
+                                                </th>
+                                                <th>
+                                                    SEXO
+                                                </th>
+                                                @*<th>
+                            @Html.DisplayNameFor(model => model.VOT_JUNTA)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.BLA_JUNTA)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NUL_JUNTA)
+                        </th>*@
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    @*<td>
+                                @Html.DisplayFor(modelItem => item.COD_USUARIO)
+                            </td>*@
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.USUARIO)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Nom_Provincia)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Nom_Canton)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Nom_Parroquia)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Nom_Zona)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.junta)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.sexo)
+                                                    </td>
+                                                    @*<td>
+                                @Html.DisplayFor(modelItem => item.ESTADO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MAIL)
+                            </td>*@
+
+                                                    <td>
+                                                        @Html.ActionLink("Asignar", "Edit", new { id = item.COD_JUNTA }, new { @class = "btn btn-block btn-info" }) 
+                                                        @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+                                                        @if (item.COD_USUARIO != 0)
+                                                        {
+                                                            @Html.ActionLink("Quitar", "Delete", new { id = item.COD_JUNTA }, new { @class = "btn btn-block btn-warning" })
+                                                        }
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                 
+                                }
+
+
+                            </div>
+                         </div>
+                    }
 </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+                                
+                              
+
+                                @if (ViewBag.Message != null)
+                                {
+                                    <script type="text/javascript">
+                                        window.onload = function () {
+                                            alert("@ViewBag.Message");
+                                        };
+                                    </script>
+                                }
+                             
