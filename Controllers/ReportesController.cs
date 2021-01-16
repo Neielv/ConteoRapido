@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CoreCRUDwithORACLE.Interfaces;
+using CoreCRUDwithORACLE.Models;
+using CoreCRUDwithORACLE.ViewModels.Reportes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,79 +13,163 @@ namespace CoreCRUDwithORACLE.Controllers
 {
     public class ReportesController : Controller
     {
-        // GET: ReportesController
-        public ActionResult Index()
+        private readonly IServicioReportes servicioReportes;
+        private readonly ApplicationUser applicationUser;
+
+        //// GET: ReportesController
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
+
+        //// GET: ReportesController/Details/5
+        //public ActionResult Details(int id)
+        //{
+        //    return View();
+        //}
+
+        //// GET: ReportesController/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        //// POST: ReportesController/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: ReportesController/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: ReportesController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: ReportesController/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: ReportesController/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+        //[ValidateAntiForgeryToken]
+        //public async Task
+        public ReportesController(IServicioReportes _servicioReportes, ApplicationUser _applicationUser)
         {
-            return View();
+            servicioReportes = _servicioReportes;
+            applicationUser = _applicationUser;
         }
 
-        // GET: ReportesController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
 
-        // GET: ReportesController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+            IEnumerable<AOperadoresProvincia> operadoresProvincias = null;
+            int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codigoProvincia == 0)
+                operadoresProvincias = await servicioReportes.OperadoresProvincia();
+            else
+                operadoresProvincias = await servicioReportes.OperadoresProvincia(codigoProvincia);
 
-        // POST: ReportesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            if ((operadoresProvincias == null) || (operadoresProvincias.Count() == 0))
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
                 return View();
             }
+
+            return View(operadoresProvincias);
         }
 
-        // GET: ReportesController/Edit/5
-        public ActionResult Edit(int id)
+        [Route("Reportes/OperadoresCanton/{codProvincia}")]
+        public async Task<IActionResult> OperadoresCanton (int codProvincia)
         {
-            return View();
-        }
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
 
-        // POST: ReportesController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            IEnumerable<AOperadoresCanton> operadoresCanton = null;
+            //int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codProvincia == 0)
+                operadoresCanton = await servicioReportes.OperadoresCanton();
+            else
+                operadoresCanton = await servicioReportes.OperadoresCanton(codProvincia);
+
+            if ((operadoresCanton == null)||(operadoresCanton.Count()==0) )
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
                 return View();
             }
+
+            return View(operadoresCanton);
         }
 
-        // GET: ReportesController/Delete/5
-        public ActionResult Delete(int id)
+        [Route("Reportes/OperadoresParroquia/{codCanton}")]
+        public async Task<IActionResult> OperadoresParroquia(int codCanton)
         {
-            return View();
-        }
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
 
-        // POST: ReportesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            IEnumerable<AOperadoresParroquia> operadoresParroquia = null;
+            //int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codCanton == 0)
+                operadoresParroquia = await servicioReportes.OperadoresParroquia();
+            else
+                operadoresParroquia = await servicioReportes.OperadoresParroquia(codCanton);
+
+            if ((operadoresParroquia == null) || (operadoresParroquia.Count() == 0))
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
                 return View();
             }
+
+            return View(operadoresParroquia);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using CoreCRUDwithORACLE.Interfaces;
 using CoreCRUDwithORACLE.Models;
 using CoreCRUDwithORACLE.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CoreCRUDwithORACLE.Controllers
@@ -25,7 +28,7 @@ namespace CoreCRUDwithORACLE.Controllers
         //{
         //    this.userManager = userManager;
         //    this.signInManager = signInManager;
-            
+
         //}
 
         public AccountController(IServicioUsuario usuarioManager)
@@ -62,19 +65,60 @@ namespace CoreCRUDwithORACLE.Controllers
         //}
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
+            await HttpContext.SignOutAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme);
             return View();
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
                 //var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 Login result = usuarioManager.GetAutenticacionUsuario(model.Email, model.Password);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, model.Email),
+                    new Claim("FullName", result.CEDULA),
+                    new Claim(ClaimTypes.Role, "Administrator"),
+                };
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    //AllowRefresh = <bool>,
+                    // Refreshing the authentication session should be allowed.
+
+                    //ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                    // The time at which the authentication ticket expires. A 
+                    // value set here overrides the ExpireTimeSpan option of 
+                    // CookieAuthenticationOptions set with AddCookie.
+
+                    //IsPersistent = true,
+                    // Whether the authentication session is persisted across 
+                    // multiple requests. When used with cookies, controls
+                    // whether the cookie's lifetime is absolute (matching the
+                    // lifetime of the authentication ticket) or session-based.
+
+                    //IssuedUtc = <DateTimeOffset>,
+                    // The time at which the authentication ticket was issued.
+
+                    //RedirectUri = <string>
+                    // The full path or absolute URI to be used as an http 
+                    // redirect response value.
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
 
                 if (result != null)
                 {
@@ -86,26 +130,28 @@ namespace CoreCRUDwithORACLE.Controllers
                         return RedirectToAction("AltaClave", new RouteValueDictionary(
                                                         new { controller = "Usuario", action = "AltaClave", cedula = result.CEDULA }));
 
-                    
+
                     HttpContext.Session.SetString("cod_provincia", result.COD_PROVINCIA.ToString());
                     ViewBag.CODROL = result.COD_ROL;
                     if (result.COD_ROL == 4)
-                    { 
+                    {
                         ModelState.AddModelError(string.Empty, "Intento de ingreso inválido");
                         return View(model);
                     }
                     return RedirectToAction("index", "home");
                 }
-
-                ModelState.AddModelError(string.Empty, "Intento de ingreso inválido");
             }
+
+            ModelState.AddModelError(string.Empty, "Intento de ingreso inválido");
             return View(model);
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             //await signInManager.SignOutAsync();
             HttpContext.Session.SetString("cod_rol", "");
+            await HttpContext.SignOutAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
         }
 

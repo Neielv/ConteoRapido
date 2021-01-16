@@ -153,6 +153,9 @@ namespace CoreCRUDwithORACLE.Controllers
         //}
         public ActionResult Edit(string id)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
             //Acta acta = servicioActa.GetActa(id);
@@ -213,6 +216,9 @@ namespace CoreCRUDwithORACLE.Controllers
         // GET: ActaController/Delete/5
         public ActionResult Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             try
             {
                 int respuesta = servicioActa.ActualizaAsignacion(id);

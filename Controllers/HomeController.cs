@@ -1,6 +1,7 @@
 ﻿using CoreCRUDwithORACLE.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,11 @@ namespace CoreCRUDwithORACLE.Controllers
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
-            ViewBag.CODROL = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.CODROL = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
+            }
+            
             //ViewBag.Message = "Bienvenido " + Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
             return View();
         }
