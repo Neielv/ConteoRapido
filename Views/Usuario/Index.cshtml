@@ -52,7 +52,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped">
+                                <table id="usuarios" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>
@@ -116,11 +116,11 @@
                                                 </td>
                                                 @if (ViewBag.CODROL != 4)
                                                 {
-                                                    <td>
-                                                        @Html.ActionLink("Editar", "Edit", new { id = item.CEDULA }, new { @class = "btn btn-block btn-info" })
-                                                        @Html.ActionLink("Resetear", "ActualizaClave", new { cedula = item.CEDULA }, new { @class = "btn btn-block btn-warning" })
-
-                                                    </td>
+                                            <td>
+                                                @Html.ActionLink("Editar", "Edit", new { id = item.CEDULA }, new { @class = "btn btn-block btn-info" }) 
+                                                @Html.ActionLink("Resetear", "ActualizaClave", new { cedula = item.CEDULA  }, new { @class = "btn btn-block btn-warning" })
+                                                
+                                            </td>
                                                 }
                                             </tr>
                                         }
@@ -177,11 +177,8 @@
 <!-- AdminLTE for demo purposes -->
 <script src="~/FrontEnd/dist/js/demo.js"></script>
 <!-- page script -->
-
 <script>
-
     $(function () {
-
         $("#example1").DataTable({
             "responsive": true,
             "autoWidth": false,
@@ -196,25 +193,4 @@
             "responsive": true,
         });
     });
-</script>
-
-
-<script>
-    $.noConflict();
-    jQuery(document).ready(function ($) {
-        $('#example1').DataTable({
-
-        });
-    });
-    // Code that uses other library's $ can follow here.
-</script>
-
-<script>
-    $.noConflict();
-    jQuery(document).ready(function ($) {
-        $('#example2').DataTable({
-
-        });
-    });
-// Code that uses other library's $ can follow here.
 </script>

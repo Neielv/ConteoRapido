@@ -30,7 +30,7 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
-    @if (ViewBag.CODROL == null && Model == null)
+    @if (ViewBag.CODROL == null && Model==null)
     {
         <div class="login-page">
             @RenderBody()
@@ -83,7 +83,7 @@
                     <nav class="mt-2">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                            with font-awesome or any other icon font library -->
+    with font-awesome or any other icon font library -->
 
                             <li class="nav-item">
                                 <a asp-action="index" asp-controller="Usuario" class="nav-link">
@@ -150,16 +150,6 @@
                             </div><!-- /.col -->
 
                         </div><!-- /.row -->
-
-
-
-
-
-
-
-
-
-
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content-header -->
@@ -225,14 +215,7 @@
     <script src="~/FrontEnd/dist/js/adminlte.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="~/FrontEnd/dist/js/pages/dashboard.js"></script>
-
-   
-
-
-
     @RenderSection("Scripts", required: false)
-
-
 </body>
 
 </html>
