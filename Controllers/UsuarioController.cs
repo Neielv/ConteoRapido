@@ -469,6 +469,7 @@ namespace CoreCRUDwithORACLE.Controllers
             usuario.CLAVE = string.Empty;
             return View(usuario);
         }
+        [Route("Usuario/ActualizaClave/{cedula}")]
         [HttpPost]
         public ActionResult ActualizaClave(Usuario usuarioNew)
         {
@@ -514,6 +515,7 @@ namespace CoreCRUDwithORACLE.Controllers
             if (usuario == null)
                 return RedirectToAction("Logout", "Account");
 
+            ViewBag.ESTCLAVE = 0;
             usuario.CLAVE = string.Empty;
             return View(usuario);
         }
@@ -540,6 +542,26 @@ namespace CoreCRUDwithORACLE.Controllers
             {
                 ModelState.AddModelError(string.Empty, "No se pudo actualizar el usuario. Revise la contraseña.");
                 return View(usuarioAlta);
+            }
+        }
+        public ActionResult EncerarBase()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
+                return RedirectToAction("Logout", "Account");
+
+            int usuario = 0;
+
+            usuario = servicioUsuario.EncerarBase();
+
+            if (usuario>1)
+            {
+                ViewBag.Message = "Base actualizado exitosamente!";
+                return RedirectToAction("Logout", "Account");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "No se pudo actualizar la base.");
+                return View();
             }
         }
     }
