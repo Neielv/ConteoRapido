@@ -23,14 +23,16 @@ namespace CoreCRUDwithORACLE.Controllers
 
         public IActionResult Index()
         {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Logout", "Account");
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("cod_rol")))
                 return RedirectToAction("Logout", "Account");
 
-            if (User.Identity.IsAuthenticated)
-            {
-                ViewBag.CODROL = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
-            }
-            
+
+            ViewBag.CODROL = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
+
+
             //ViewBag.Message = "Bienvenido " + Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
             return View();
         }

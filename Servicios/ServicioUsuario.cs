@@ -66,6 +66,13 @@ namespace CoreCRUDwithORACLE.Servicios
                                                     SET    CLA_USUARIO     = '{0}',
                                                            EST_CLA_USUARIO = '{1}'
                                                     WHERE  CED_USUARIO     = '{2}'";
+
+        private string encerarBase = @"update acta 
+                                            set cod_usuario=0, vot_junta=0, bla_junta=0, nul_junta=0, est_acta = 0, cod_usuario_digitador = 0, fec_transmision = null, cod_verresultados='', fec_descarga=null,est_descarga=0, cormesa_junta=0, correcinto_junta=0;
+                                        delete from usuario where cod_usuario>1;
+                                        delete from asistencia ;
+                                        update  resultados set  fin_resultado=0, cod_vervotos = '';";
+
         public ServicioUsuario(IConfiguration _configuration)
         {
             _conn = _configuration.GetConnectionString("OracleDBConnection");
@@ -101,6 +108,9 @@ namespace CoreCRUDwithORACLE.Servicios
                             //case 4:
                             //    consultaUsuarios = consultaUsuarios + " AND US.COD_ROL = 4 ";
                             //    break;
+                            case 5:
+                                consultaUsuarios += " AND US.COD_ROL = 4";
+                                break;
                         }
 
                         consultaUsuarios += " ORDER BY 1";
@@ -467,6 +477,45 @@ namespace CoreCRUDwithORACLE.Servicios
             }
 
             return usuario;
+        }
+
+        public int EncerarBase()
+        {
+            //string cedula = "171496036";
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        //cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = string.Format(encerarBase);
+                        cmd.CommandText = "PKG_APP_MOVIL.ENCERA_BASE_DATOS";
+                        //cmd.Parameters.Add("I_CEDULA", OracleDbType.Varchar2, 20).Value = cedula;
+                        //cmd.Parameters.Add("O_CURSOR", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                        OracleDataReader odr = cmd.ExecuteReader();
+
+                        if (odr.HasRows)
+                            return 1;
+
+                        return 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        return 0;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
         }
     }
 }

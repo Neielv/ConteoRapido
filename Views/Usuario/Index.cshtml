@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<CoreCRUDwithORACLE.Models.Usuario>
-
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
     ViewData["Title"] = "Index";
 }
@@ -32,7 +32,7 @@
                     <h1>Gestión de Usuarios</h1>
                     <table>
                         <tr>
-                            @if (ViewBag.CODROL != 4)
+                            @if (@HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "CodRol")?.Value != "5")
                             {
                                 <th>
                                     <a asp-action="IngresaUsuario" class="btn btn-block btn-primary">Crear nuevo usuario</a>
@@ -114,14 +114,15 @@
                                                 <td>
                                                     @Html.CheckBoxFor(modelItem => item.ESTADO, new { @disabled = "disabled" })
                                                 </td>
-                                                @if (ViewBag.CODROL != 4)
-                                                {
-                                            <td>
-                                                @Html.ActionLink("Editar", "Edit", new { id = item.CEDULA }, new { @class = "btn btn-block btn-info" }) 
-                                                @Html.ActionLink("Resetear", "ActualizaClave", new { cedula = item.CEDULA  }, new { @class = "btn btn-block btn-warning" })
-                                                
-                                            </td>
-                                                }
+
+                                                <td>
+                                                    @if (@HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "CodRol")?.Value != "5")
+                                                    {
+                                                        @Html.ActionLink("Editar", "Edit", new { id = item.CEDULA }, new { @class = "btn btn-block btn-info" })
+                                                    }
+                                                    @Html.ActionLink("Resetear", "ActualizaClave", new { cedula = item.CEDULA }, new { @class = "btn btn-block btn-warning" })
+
+                                                </td>
                                             </tr>
                                         }
                                     </tbody>

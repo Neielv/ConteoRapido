@@ -1,10 +1,10 @@
-﻿@model IEnumerable<CoreCRUDwithORACLE.ViewModels.Reportes.ATransmitidasCanton>
+﻿@model IEnumerable<CoreCRUDwithORACLE.ViewModels.Reportes.ATransmitidasParroquias>
 
 @{
-    ViewData["Title"] = "TransmitidasCanton";
+    ViewData["Title"] = "TransmitidasParroquia";
 }
 
-<h1>Actas Transmitidas por Canton</h1>
+<h1>Actas Transmitidas por Parroquia</h1>
 
 <div asp-validation-summary="All" class="text-danger"></div>
 @if (Model != null)
@@ -14,7 +14,7 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.CODIGO_PROVINCIA)
+                        @Html.DisplayNameFor(model => model.CCANTON)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.CODIGO)
@@ -24,6 +24,9 @@
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.CANTON)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PARROQUIA)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.JUNTAS)
@@ -39,7 +42,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CODIGO_PROVINCIA)
+                            @Html.DisplayFor(modelItem => item.CCANTON)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.CODIGO)
@@ -51,13 +54,16 @@
                             @Html.DisplayFor(modelItem => item.CANTON)
                         </td>
                         <td>
+                            @Html.DisplayFor(modelItem => item.PARROQUIA)
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.JUNTAS)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.TRANSMITIDAS)
                         </td>
                         <td>
-                            @Html.ActionLink("Parroquias", "TransmitidasParroquia", new { codCanton = item.CODIGO })
+                            @Html.ActionLink("Detalle", "DetalleOperadores", new { codParroquia = item.CODIGO })
                         </td>
                     </tr>
                 }
