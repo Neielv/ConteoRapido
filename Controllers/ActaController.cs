@@ -59,7 +59,7 @@ namespace CoreCRUDwithORACLE.Controllers
 
             ViewData["CurrentFilter"] = textoBuscar;
 
-            var actas = servicioActa.GetActas(Convert.ToInt32(HttpContext.Session.GetString("cod_provincia")));
+           var actas = servicioActa.GetActas(Convert.ToInt32(HttpContext.Session.GetString("cod_provincia")));
 
             if (actas == null)
             {
@@ -107,13 +107,14 @@ namespace CoreCRUDwithORACLE.Controllers
                     break;
             }
 
-            int pageSize = 10;
+            int pageSize = actas.Count();
 
             if (!string.IsNullOrEmpty(mensaje))
                 ViewBag.Message = mensaje;
             //return View(PaginatedList<ActaResponse>.CreateAsync(actas.AsQueryable(), pageNumber ?? 1, pageSize));
             return View(PaginatedList<ActaResponse>.Create(actas.AsQueryable(), pageNumber ?? 1, pageSize));
-            //return View(actas.ToList());
+
+          
         }
 
 
