@@ -25,6 +25,13 @@ namespace CoreCRUDwithORACLE.Servicios
         private string sOperadoresDetalle = @"SELECT * FROM CONTEORAPIDO2021.DETALLEOPERADORES";
         private string sTransmitidasProvincia = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSPROV";
         private string sTransmitidasCanton = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSCANTON";
+        private string sTransmitidasParroquia = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSPARR";
+        private string sTransmitidasDetalle = @"SELECT * FROM CONTEORAPIDO2021.DETALLETRANSMITIDAS";
+        private string sReporteGeneralProv = @"SELECT COD_PROVINCIA, NOM_PROVINCIA, SUM(JUNTAS) JUNTAS, SUM(ASIGNADAS) ASIGNADAS,SUM(DESCARGADAS) DESCARGADAS, SUM(REPORTADAS) REPORTADAS, SUM(TRANSMITIDAS) TRANSMITIDAS
+                                                FROM REPORTEGRAL";
+        private string sReporteGeneralCant = @"SELECT COD_PROVINCIA, NOM_PROVINCIA, COD_CANTON,NOM_CANTON,  SUM(JUNTAS) JUNTAS, SUM(ASIGNADAS) ASIGNADAS,SUM(DESCARGADAS) DESCARGADAS, SUM(REPORTADAS) REPORTADAS, SUM(TRANSMITIDAS) TRANSMITIDAS
+                                                FROM REPORTEGRAL";
+        private string sReporteGeneralParr = @"SELECT* FROM REPORTEGRAL";
 
         public async Task<IEnumerable<AOperadoresProvincia>> OperadoresProvincia(int? codigoProvincia = null)
         {
@@ -393,9 +400,9 @@ namespace CoreCRUDwithORACLE.Servicios
                         //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
 
                         if (codigoCanton.HasValue)
-                            sTransmitidasCanton += " WHERE CCANTON = " + codigoCanton.ToString();
+                            sTransmitidasParroquia += " WHERE CCANTON = " + codigoCanton.ToString();
 
-                        cmd.CommandText = string.Format(sTransmitidasCanton);
+                        cmd.CommandText = string.Format(sTransmitidasParroquia);
 
                         OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
 
@@ -433,6 +440,259 @@ namespace CoreCRUDwithORACLE.Servicios
             }
 
             return transmitidasParroquia;
+        }
+        public async Task<IEnumerable<DetallesTransmitidas>> TransmitidasDetalle(int? codigoParroquia = null)
+        {
+            List<DetallesTransmitidas> transmitidasDetalles = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoParroquia.HasValue)
+                            sTransmitidasDetalle += " WHERE CODIGO = " + codigoParroquia.ToString();
+
+                        cmd.CommandText = string.Format(sTransmitidasDetalle);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            transmitidasDetalles = new List<DetallesTransmitidas>();
+                            while (odr.Read())
+                            {
+                                DetallesTransmitidas transmitida = new DetallesTransmitidas
+                                {
+                                    CODIGO = Convert.ToInt32(odr["CODIGO"]),
+                                    PARROQUIA = Convert.ToString(odr["PARROQUIA"]),
+                                    CCANTON = Convert.ToInt32(odr["CCANTON"]),
+                                    CANTON = Convert.ToString(odr["CANTON"]),
+                                    PROVINCIA = Convert.ToString(odr["PROVINCIA"]),
+                                    COD_JUNTA = Convert.ToInt32(odr["COD_JUNTA"]),
+                                    JUNTA = Convert.ToInt32(odr["JUNTA"]),
+                                    SEXO = Convert.ToString(odr["SEXO"]),
+                                    USUARIO = Convert.ToString(odr["USUARIO"]),
+                                    TELEFONO = Convert.ToString(odr["TELEFONO"]),
+                                    TRANSMITIDAS = Convert.ToBoolean(odr["TRANSMITIDAS"])
+                                };
+                                transmitidasDetalles.Add(transmitida);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return transmitidasDetalles;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return transmitidasDetalles;
+        }
+        public async Task<IEnumerable<InformacionGeneral>> GeneralProvincia(int? codigoProvincia = null)
+        {
+            List<InformacionGeneral> generalProv = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoProvincia.HasValue)
+                            sReporteGeneralProv += " WHERE COD_PROVINCIA = " + codigoProvincia.ToString();
+
+                        sReporteGeneralProv += @" GROUP BY COD_PROVINCIA, NOM_PROVINCIA
+                                                ORDER BY COD_PROVINCIA, NOM_PROVINCIA";
+
+                        cmd.CommandText = string.Format(sReporteGeneralProv);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            generalProv = new List<InformacionGeneral>();
+                            while (odr.Read())
+                            {
+                                InformacionGeneral generalProvincia = new InformacionGeneral
+                                {
+                                    COD_PROVINCIA = Convert.ToInt32(odr["COD_PROVINCIA"]),
+                                    NOM_PROVINCIA = Convert.ToString(odr["NOM_PROVINCIA"]),
+                                    JUNTAS = Convert.ToInt32(odr["JUNTAS"]),
+                                    DESCARGADAS = Convert.ToInt32(odr["DESCARGADAS"]),
+                                    ASIGNADAS = Convert.ToInt32(odr["ASIGNADAS"]),
+                                    REPORTADAS = Convert.ToInt32(odr["REPORTADAS"]),
+                                    TRANSMITIDAS = Convert.ToInt32(odr["TRANSMITIDAS"])
+                                };
+                                generalProv.Add(generalProvincia);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return generalProv;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return generalProv;
+        }
+        public async Task<IEnumerable<InformacionGeneral>> GeneralCanton(int? codigoProvincia = null)
+        {
+            List<InformacionGeneral> generalesCanton = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoProvincia.HasValue)
+                            sReporteGeneralCant += " WHERE COD_PROVINCIA = " + codigoProvincia.ToString();
+
+                        sReporteGeneralCant += @" GROUP BY COD_CANTON,NOM_CANTON,COD_PROVINCIA, NOM_PROVINCIA
+                                                ORDER BY COD_PROVINCIA, NOM_PROVINCIA,COD_CANTON,NOM_CANTON";
+
+                        cmd.CommandText = string.Format(sReporteGeneralCant);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            generalesCanton = new List<InformacionGeneral>();
+                            while (odr.Read())
+                            {
+                                InformacionGeneral generalCanton = new InformacionGeneral
+                                {
+                                    COD_CANTON = Convert.ToInt32(odr["COD_CANTON"]),
+                                    NOM_CANTON = Convert.ToString(odr["NOM_CANTON"]),
+                                    COD_PROVINCIA = Convert.ToInt32(odr["COD_PROVINCIA"]),
+                                    NOM_PROVINCIA = Convert.ToString(odr["NOM_PROVINCIA"]),
+                                    JUNTAS = Convert.ToInt32(odr["JUNTAS"]),
+                                    DESCARGADAS = Convert.ToInt32(odr["DESCARGADAS"]),
+                                    ASIGNADAS = Convert.ToInt32(odr["ASIGNADAS"]),
+                                    REPORTADAS = Convert.ToInt32(odr["REPORTADAS"]),
+                                    TRANSMITIDAS = Convert.ToInt32(odr["TRANSMITIDAS"])
+                                };
+                                generalesCanton.Add(generalCanton);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return generalesCanton;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return generalesCanton;
+        }
+        public async Task<IEnumerable<InformacionGeneral>> GeneralParroquia(int? codigoCanton = null)
+        {
+            List<InformacionGeneral> generalesParroquia = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoCanton.HasValue)
+                            sReporteGeneralParr += " WHERE COD_CANTON = " + codigoCanton.ToString();
+
+                        sReporteGeneralParr += @"GROUP BY COD_PROVINCIA, NOM_PROVINCIA, COD_CANTON, NOM_CANTON, COD_PARROQUIA, NOM_PARROQUIA, NOM_ZONA, JUNTAS,
+                                                   ASIGNADAS, DESCARGADAS, REPORTADAS, TRANSMITIDAS
+                                                ORDER BY COD_PROVINCIA, NOM_PROVINCIA,COD_CANTON,NOM_CANTON, COD_PARROQUIA, NOM_PARROQUIA, NOM_ZONA";
+
+                        cmd.CommandText = string.Format(sReporteGeneralParr);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            generalesParroquia = new List<InformacionGeneral>();
+                            while (odr.Read())
+                            {
+                                InformacionGeneral generalParroquia = new InformacionGeneral
+                                {
+                                    COD_PROVINCIA = Convert.ToInt32(odr["COD_PROVINCIA"]),
+                                    NOM_PROVINCIA = Convert.ToString(odr["NOM_PROVINCIA"]),
+                                    COD_CANTON = Convert.ToInt32(odr["COD_CANTON"]),
+                                    NOM_CANTON = Convert.ToString(odr["NOM_CANTON"]),
+                                    COD_PARROQUIA = Convert.ToInt32(odr["COD_PARROQUIA"]), 
+                                    NOM_PARROQUIA = Convert.ToString(odr["NOM_PARROQUIA"]),
+                                    NOM_ZONA = Convert.ToString(odr["NOM_ZONA"]),
+                                    JUNTAS = Convert.ToInt32(odr["JUNTAS"]),
+                                    DESCARGADAS = Convert.ToInt32(odr["DESCARGADAS"]),
+                                    ASIGNADAS = Convert.ToInt32(odr["ASIGNADAS"]),
+                                    REPORTADAS = Convert.ToInt32(odr["REPORTADAS"]),
+                                    TRANSMITIDAS = Convert.ToInt32(odr["TRANSMITIDAS"])
+                                };
+                                generalesParroquia.Add(generalParroquia);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return generalesParroquia;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return generalesParroquia;
         }
     }
 }
