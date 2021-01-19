@@ -25,6 +25,8 @@ namespace CoreCRUDwithORACLE.Servicios
         private string sOperadoresDetalle = @"SELECT * FROM CONTEORAPIDO2021.DETALLEOPERADORES";
         private string sTransmitidasProvincia = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSPROV";
         private string sTransmitidasCanton = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSCANTON";
+        private string sTransmitidasParroquia = @"SELECT * FROM CONTEORAPIDO2021.ACTASTRANSPARR";
+        private string sTransmitidasDetalle = @"SELECT * FROM CONTEORAPIDO2021.DETALLETRANSMITIDAS";
 
         public async Task<IEnumerable<AOperadoresProvincia>> OperadoresProvincia(int? codigoProvincia = null)
         {
@@ -393,9 +395,9 @@ namespace CoreCRUDwithORACLE.Servicios
                         //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
 
                         if (codigoCanton.HasValue)
-                            sTransmitidasCanton += " WHERE CCANTON = " + codigoCanton.ToString();
+                            sTransmitidasParroquia += " WHERE CCANTON = " + codigoCanton.ToString();
 
-                        cmd.CommandText = string.Format(sTransmitidasCanton);
+                        cmd.CommandText = string.Format(sTransmitidasParroquia);
 
                         OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
 
@@ -433,6 +435,68 @@ namespace CoreCRUDwithORACLE.Servicios
             }
 
             return transmitidasParroquia;
+        }
+        public async Task<IEnumerable<DetallesTransmitidas>> TransmitidasDetalle(int? codigoParroquia = null)
+        {
+            List<DetallesTransmitidas> transmitidasDetalles = null;
+
+            using (OracleConnection con = new OracleConnection(_conn))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        //cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.CommandText = "PKG_CONTEO_RAPIDO.CONSULTA_USUARIO";
+
+                        if (codigoParroquia.HasValue)
+                            sTransmitidasDetalle += " WHERE CODIGO = " + codigoParroquia.ToString();
+
+                        cmd.CommandText = string.Format(sTransmitidasDetalle);
+
+                        OracleDataReader odr = (OracleDataReader)await cmd.ExecuteReaderAsync();
+
+                        if (odr.HasRows)
+                        {
+                            transmitidasDetalles = new List<DetallesTransmitidas>();
+                            while (odr.Read())
+                            {
+                                DetallesTransmitidas transmitida = new DetallesTransmitidas
+                                {
+                                    CODIGO = Convert.ToInt32(odr["CODIGO"]),
+                                    PARROQUIA = Convert.ToString(odr["PARROQUIA"]),
+                                    CCANTON = Convert.ToInt32(odr["CCANTON"]),
+                                    CANTON = Convert.ToString(odr["CANTON"]),
+                                    PROVINCIA = Convert.ToString(odr["PROVINCIA"]),
+                                    COD_JUNTA = Convert.ToInt32(odr["COD_JUNTA"]),
+                                    JUNTA = Convert.ToInt32(odr["JUNTA"]),
+                                    SEXO = Convert.ToString(odr["SEXO"]),
+                                    USUARIO = Convert.ToString(odr["USUARIO"]),
+                                    TELEFONO = Convert.ToString(odr["TELEFONO"]),
+                                    TRANSMITIDAS = Convert.ToBoolean(odr["TRANSMITIDAS"])
+                                };
+                                transmitidasDetalles.Add(transmitida);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return transmitidasDetalles;
+                    }
+                    finally
+                    {
+                        con.Close();
+                        con.Dispose();
+                        cmd.Dispose();
+                    }
+
+                }
+            }
+
+            return transmitidasDetalles;
         }
     }
 }
