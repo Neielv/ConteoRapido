@@ -561,7 +561,6 @@ namespace CoreCRUDwithORACLE.Controllers
 
             return View(await PaginatedListAsync<ATransmitidasCanton>.CreateAsync(transmitidasCanton.AsQueryable(), pageNumber ?? 1, pageSize));
 
-            //return View(transmitidasCanton);
         }
         [Route("Reportes/TransmitidasParroquia/{codCanton}")]
         public async Task<IActionResult> TransmitidasParroquia(int codCanton, string sortOrder, string currentFilter,
@@ -728,5 +727,242 @@ namespace CoreCRUDwithORACLE.Controllers
             return View(await PaginatedListAsync<DetallesTransmitidas>.CreateAsync(transmitidasParroquia.AsQueryable(), pageNumber ?? 1, pageSize));
             //return View(transmitidasParroquia);
         }
+        [Route("Reportes/GeneralProvincia")]
+        public async Task<IActionResult> GeneralProvincia(string sortOrder, string currentFilter,
+                                                string textoBuscar, int? pageNumber)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["ProvSortParm"] = String.IsNullOrEmpty(sortOrder) ? "prov_desc" : "";
+            ViewData["CurrentFilter"] = textoBuscar;
+
+            int number;
+
+            if (textoBuscar != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                textoBuscar = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = textoBuscar;
+
+            IEnumerable<InformacionGeneral> generalProvincias = null;
+            int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
+            int codigoRol = Convert.ToInt32(HttpContext.Session.GetString("cod_rol"));
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codigoRol != 5)
+            {
+                if (codigoProvincia == 0)
+                    generalProvincias = await servicioReportes.GeneralProvincia();
+                else
+                    generalProvincias = await servicioReportes.GeneralProvincia(codigoProvincia);
+            }
+            else
+                generalProvincias = await servicioReportes.GeneralProvincia();
+
+            if ((generalProvincias == null) || (generalProvincias.Count() == 0))
+            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
+                return View();
+            }
+
+            if (!String.IsNullOrEmpty(textoBuscar))
+            {
+                if (Int32.TryParse(textoBuscar, out number))
+                {
+                    generalProvincias = generalProvincias.Where(a => a.COD_PROVINCIA == number);
+                }
+                else
+                {
+                    generalProvincias = generalProvincias.Where(s => s.NOM_PROVINCIA.Contains(textoBuscar));
+                }
+            }
+
+            switch (sortOrder)
+            {
+                case "prov_desc":
+                    generalProvincias = generalProvincias.OrderByDescending(a => a.NOM_PROVINCIA);
+                    break;
+                default:
+                    generalProvincias = generalProvincias.OrderBy(a => a.NOM_PROVINCIA);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return View(await PaginatedListAsync<InformacionGeneral>.CreateAsync(generalProvincias.AsQueryable(), pageNumber ?? 1, pageSize));
+            
+        }
+        [Route("Reportes/GeneralCanton/{codigoProvincia}")]
+        public async Task<IActionResult> GeneralCanton(int codigoProvincia, string sortOrder, string currentFilter,
+                                               string textoBuscar, int? pageNumber)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
+
+            ViewData["CantonSortParm"] = String.IsNullOrEmpty(sortOrder) ? "canton_desc" : "";
+            ViewData["ProvSortParm"] = String.IsNullOrEmpty(sortOrder) ? "prov_desc" : "nom_prov";
+            ViewData["CurrentFilter"] = textoBuscar;
+
+            int number;
+
+            if (textoBuscar != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                textoBuscar = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = textoBuscar;
+
+            IEnumerable<InformacionGeneral> generalesCanton = null;
+
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codigoProvincia == 0)
+                generalesCanton = await servicioReportes.GeneralCanton();
+            else
+                generalesCanton = await servicioReportes.GeneralCanton(codigoProvincia);
+
+            if ((generalesCanton == null) || (generalesCanton.Count() == 0))
+            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
+                return View();
+            }
+
+            if (!String.IsNullOrEmpty(textoBuscar))
+            {
+                if (Int32.TryParse(textoBuscar, out number))
+                {
+                    generalesCanton = generalesCanton.Where(a => a.COD_CANTON == number);
+                }
+                else
+                {
+                    generalesCanton = generalesCanton.Where(s => s.NOM_CANTON.Contains(textoBuscar)
+                                                                || s.NOM_PROVINCIA.Contains(textoBuscar));
+                }
+            }
+
+            switch (sortOrder)
+            {
+                case "canton_desc":
+                    generalesCanton = generalesCanton.OrderByDescending(a => a.NOM_CANTON);
+                    break;
+                case "prov_desc":
+                    generalesCanton = generalesCanton.OrderByDescending(a => a.NOM_PROVINCIA);
+                    break;
+                case "nom_prov":
+                    generalesCanton = generalesCanton.OrderBy(a => a.NOM_PROVINCIA);
+                    break;
+                default:
+                    generalesCanton = generalesCanton.OrderBy(a => a.NOM_CANTON);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return View(await PaginatedListAsync<InformacionGeneral>.CreateAsync(generalesCanton.AsQueryable(), pageNumber ?? 1, pageSize));
+
+        }
+        [Route("Reportes/GeneralesParroquia/{codCanton}")]
+        public async Task<IActionResult> GeneralesParroquia(int codCanton, string sortOrder, string currentFilter,
+                                                string textoBuscar, int? pageNumber)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("Account/LogOut");
+            //return RedirectToPage("Logout", "Account");
+
+            ViewData["ZonSortParm"] = String.IsNullOrEmpty(sortOrder) ? "zon_desc" : "nom_zon";
+            ViewData["CantonSortParm"] = String.IsNullOrEmpty(sortOrder) ? "canton_desc" : "nom_cant";
+            ViewData["ProvSortParm"] = String.IsNullOrEmpty(sortOrder) ? "prov_desc" : "nom_prov";
+            ViewData["ParrSortParm"] = String.IsNullOrEmpty(sortOrder) ? "parr_desc" : "";
+            ViewData["CurrentFilter"] = textoBuscar;
+
+            int number;
+
+            if (textoBuscar != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                textoBuscar = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = textoBuscar;
+
+            IEnumerable<InformacionGeneral> generalesParroquia = null;
+            //int codigoProvincia = Convert.ToInt32(HttpContext.Session.GetString("cod_provincia"));
+            //if (!codigoProvincia.HasValue)
+            //    return RedirectToAction("Logout", "Account");
+            if (codCanton == 0)
+                generalesParroquia = await servicioReportes.GeneralParroquia();
+            else
+                generalesParroquia = await servicioReportes.GeneralParroquia(codCanton);
+
+            if ((generalesParroquia == null) || (generalesParroquia.Count() == 0))
+            {
+                ModelState.AddModelError(string.Empty, "No existen Registros.");
+                return View();
+            }
+
+            if (!String.IsNullOrEmpty(textoBuscar))
+            {
+                if (Int32.TryParse(textoBuscar, out number))
+                {
+                    generalesParroquia = generalesParroquia.Where(a => a.COD_PARROQUIA == number);
+                }
+                else
+                {
+                    generalesParroquia = generalesParroquia.Where(s => s.NOM_CANTON.Contains(textoBuscar)
+                                                                || s.NOM_PARROQUIA.Contains(textoBuscar)
+                                                                || s.NOM_PROVINCIA.Contains(textoBuscar)
+                                                                || s.NOM_ZONA.Contains(textoBuscar));
+                }
+            }
+
+            switch (sortOrder)
+            {
+                case "parr_desc":
+                    generalesParroquia = generalesParroquia.OrderByDescending(a => a.NOM_PARROQUIA);
+                    break;
+                case "canton_desc":
+                    generalesParroquia = generalesParroquia.OrderByDescending(a => a.NOM_CANTON);
+                    break;
+                case "nom_cant":
+                    generalesParroquia = generalesParroquia.OrderBy(a => a.NOM_CANTON);
+                    break;
+                case "prov_desc":
+                    generalesParroquia = generalesParroquia.OrderByDescending(a => a.NOM_PROVINCIA);
+                    break;
+                case "nom_prov":
+                    generalesParroquia = generalesParroquia.OrderBy(a => a.NOM_PROVINCIA);
+                    break;
+                case "zon_desc":
+                    generalesParroquia = generalesParroquia.OrderByDescending(a => a.NOM_ZONA);
+                    break;
+                case "nom_zon":
+                    generalesParroquia = generalesParroquia.OrderBy(a => a.NOM_ZONA);
+                    break;
+                default:
+                    generalesParroquia = generalesParroquia.OrderBy(a => a.NOM_PARROQUIA);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return View(await PaginatedListAsync<InformacionGeneral>.CreateAsync(generalesParroquia.AsQueryable(), pageNumber ?? 1, pageSize));
+            //return View(transmitidasParroquia);
+        }
+
     }
 }
