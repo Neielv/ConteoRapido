@@ -2,6 +2,7 @@
 using CoreCRUDwithORACLE.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace CoreCRUDwithORACLE.Servicios
     {
         private readonly string _conn;
         private Comunes.Auxiliar _helper = new Comunes.Auxiliar();
+        private readonly ILogger _logger;
 
         private string consultaUsuarios = @"SELECT US.COD_USUARIO, PR.COD_PROVINCIA, PR.NOM_PROVINCIA, US.CED_USUARIO || US.DIG_USUARIO CEDULA, US.LOG_USUARIO,
                                                 US.CLA_USUARIO, US.NOM_USUARIO, RO.COD_ROL, RO.DES_ROL, US.EST_USUARIO, 
@@ -393,7 +395,7 @@ namespace CoreCRUDwithORACLE.Servicios
                             usuario.COD_USUARIO = Convert.ToInt32(odr["Codigo"]) + 1;
                         }
 
-                        cmd.CommandText = string.Format(ingresaUsuario, usuario.COD_USUARIO, usuario.CODIGO_ROL, usuario.LOGEO,
+                        cmd.CommandText = string.Format(ingresaUsuario, usuario.COD_USUARIO, usuario.CODIGO_ROL, usuario.MAIL.Substring(0, 20),
                                                 _helper.EncodePassword(usuario.CLAVE), usuario.CEDULA.Substring(0,9), usuario.CEDULA.Substring(9, 1),
                                                 usuario.NOMBRE, usuario.MAIL, usuario.ESTADO?"1":"0", usuario.CODIGO_PROVINCIA, usuario.TELEFONO);
 
@@ -403,6 +405,7 @@ namespace CoreCRUDwithORACLE.Servicios
                     }
                     catch (Exception ex)
                     {
+                        _logger.LogInformation(ex.Message);
                         return respuesta;
                         //throw ex;
                     }
