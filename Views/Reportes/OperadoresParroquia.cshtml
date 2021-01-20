@@ -101,14 +101,14 @@
                                         var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
                                         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
                                     }
-                                    <a asp-action="OperadorParroquia"
+                                    <a asp-action="OperadoresParroquia"
                                        asp-route-sortOrder="@ViewData["CurrentSort"]"
                                        asp-route-pageNumber="@(Model.PageIndex - 1)"
                                        asp-route-currentFilter="@ViewData["CurrentFilter"]"
                                        class="btn btn-default @prevDisabled">
                                         Anterior
                                     </a>
-                                    <a asp-action="OperadorParroquia"
+                                    <a asp-action="OperadoresParroquia"
                                        asp-route-sortOrder="@ViewData["CurrentSort"]"
                                        asp-route-pageNumber="@(Model.PageIndex + 1)"
                                        asp-route-currentFilter="@ViewData["CurrentFilter"]"

@@ -1,4 +1,5 @@
 ﻿
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,8 +86,8 @@
                         <nav class="mt-2">
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                                 <!-- Add icons to the links using the .nav-icon class
-    with font-awesome or any other icon font library -->
-                                @if (ViewBag.CODROL != 5 || ViewBag.CODROL != 6)
+                                with font-awesome or any other icon font library -->
+                                @if (@HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "CodRol")?.Value != "5" || ViewBag.CODROL != 6)
                                 {
                                     <li class="nav-item">
                                         <a asp-action="index" asp-controller="Usuario" class="nav-link">
@@ -97,9 +98,9 @@
                                         </a>
                                     </li>
                                 }
-                                @if (ViewBag.CODROL != 1)
+                                @if (@HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "CodRol")?.Value != "1")
                                 {
-                                    if (ViewBag.CODROL == 3)
+                                    if (@HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "CodRol")?.Value == "3")
                                     {
                                         <li class="nav-item">
                                             <a asp-action="index" asp-controller="Acta" class="nav-link">
@@ -127,7 +128,7 @@
                                         </a>
                                     </li>
                                 }
-                                @if (ViewBag.CODROL == 1)
+                                @if (@HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "CodRol")?.Value == "1")
                                 {
                                     <li class="nav-item">
                                         <a asp-action="EncerarBase" asp-controller="Usuario" class="nav-link">
