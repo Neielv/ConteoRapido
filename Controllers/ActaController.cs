@@ -41,8 +41,6 @@ namespace CoreCRUDwithORACLE.Controllers
         public IActionResult Index(string sortOrder, string currentFilter, 
                                                 string textoBuscar, int? pageNumber)
         {
-            if (!User.Identity.IsAuthenticated)
-                return Redirect("Account/LogOut");
             ViewData["CurrentSort"] = sortOrder;
             ViewData["CanSortParm"] = String.IsNullOrEmpty(sortOrder) ? "canton_desc" : "";
             ViewData["ParrSortParm"] = String.IsNullOrEmpty(sortOrder) ? "parroquia_desc" : "nom_parroquia";

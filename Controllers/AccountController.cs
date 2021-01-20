@@ -83,12 +83,10 @@ namespace CoreCRUDwithORACLE.Controllers
 
                 if (result != null)
                 {
-
-                    
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, result.NOMBRE),
-                        new Claim("CodRol", result.COD_ROL.ToString()),
+                        new Claim("FullName", result.CEDULA),
                         new Claim(ClaimTypes.Role, "Administrator"),
                     };
 
@@ -124,21 +122,18 @@ namespace CoreCRUDwithORACLE.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
-                    HttpContext.Session.SetString("cod_rol", result.COD_ROL.ToString());
-                    ViewBag.CODROL = result.COD_ROL;
-
-                    if (result.EST_CLAVE == 0)
-                    {
-                        return RedirectToAction("AltaClave", new RouteValueDictionary(
-                                                        new { controller = "Usuario", action = "AltaClave", cedula = result.CEDULA }));
-                    }
 
                     //var resultado = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                     //ViewBag.Model = model;
                     //if (resultado.Succeeded)
-                    
+                    HttpContext.Session.SetString("cod_rol", result.COD_ROL.ToString());
+                    if (result.EST_CLAVE == 0)
+                        return RedirectToAction("AltaClave", new RouteValueDictionary(
+                                                        new { controller = "Usuario", action = "AltaClave", cedula = result.CEDULA }));
+
+
                     HttpContext.Session.SetString("cod_provincia", result.COD_PROVINCIA.ToString());
-                    
+                    ViewBag.CODROL = result.COD_ROL;
                     if (result.COD_ROL == 4)
                     {
                         ModelState.AddModelError(string.Empty, "Intento de ingreso inválido");
