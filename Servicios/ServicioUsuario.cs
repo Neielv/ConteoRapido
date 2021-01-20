@@ -39,8 +39,7 @@ namespace CoreCRUDwithORACLE.Servicios
         private string consultaUsuario = @"select COD_ROL, NOM_USUARIO, COD_PROVINCIA, EST_CLA_USUARIO, CED_USUARIO || DIG_USUARIO CEDULA
                                         from USUARIO
                                         where MAI_USUARIO = '{0}'
-                                        and CLA_USUARIO = '{1}'
-                                        and EST_USUARIO = 1";
+                                        and CLA_USUARIO = '{1}'";
 
         private string consultaCodUsuario = @"SELECT MAX(COD_USUARIO) Codigo FROM USUARIO";
 

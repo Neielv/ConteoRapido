@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<CoreCRUDwithORACLE.ViewModels.Reportes.ATransmitidasProvincia>*@
-@model CoreCRUDwithORACLE.Comunes.PaginatedListAsync<CoreCRUDwithORACLE.ViewModels.Reportes.ATransmitidasProvincia>
+﻿@model IEnumerable<CoreCRUDwithORACLE.ViewModels.Reportes.ATransmitidasProvincia>
 
 @{
     ViewData["Title"] = "TransmitidasProvincia";
@@ -7,112 +6,56 @@
 
 <h1>Actas Transmitidas por Provincia</h1>
 
-<div id="wrapper">
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <table>
-                        <tr>
-
-                            <th> <a asp-controller="Home" asp-action="Index" class="btn btn-block btn-secondary">  Ir al Inicio </a></th>
-                            <th> <a asp-controller="Account" asp-action="Logout" class="btn btn-block btn-danger">Salir</a></th>
-                        </tr>
-                    </table>
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    @if (Model != null)
-                    {
-                        <div class="card">
-                            <div class="card-header">
-                                <form asp-action="TransmitidasProvincia" method="get">
-                                    <div class="form-actions no-color">
-                                        <p>
-                                            Ingrese Texto: <input type="text" name="textoBuscar" value="@ViewData["CurrentFilter"]" />
-                                            <input type="submit" value="Buscar" class="btn btn-default btn-light" /> |
-                                            <a asp-action="TransmitidasProvincia">Listado Completo</a>
-                                        </p>
-                                    </div>
-                                </form>
-                                <div asp-validation-summary="All" class="text-danger"></div>
-
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <table id="TransProv" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    @*@Html.DisplayNameFor(model => model.CODIGO)*@
-                                                    CODIGO PROVINCIA
-                                                </th>
-                                                <th>
-                                                    <a asp-action="TransmitidasProvincia" asp-route-sortOrder="@ViewData["ProvSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">PROVINCIA</a>
-                                                    @*@Html.DisplayNameFor(model => model.PROVINCIA)*@
-                                                </th>
-                                                <th>
-                                                    JUNTAS
-                                                    @*@Html.DisplayNameFor(model => model.JUNTAS)*@
-                                                </th>
-                                                <th>
-                                                    TRANSMITIDAS
-                                                    @*@Html.DisplayNameFor(model => model.TRANSMITIDAS)*@
-                                                </th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in Model)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.CODIGO)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.PROVINCIA)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.JUNTAS)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.TRANSMITIDAS)
-                                                    </td>
-                                                    <td>
-                                                        @Html.ActionLink("Cantón", "TransmitidasCanton", new { codProvincia = item.CODIGO }, new { @class = "btn btn-block btn-info" }) @*|
-                                                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                                                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                    @{
-                                        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-                                        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-                                    }
-                                    <a asp-action="TransmitidasProvincia"
-                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                                       asp-route-pageNumber="@(Model.PageIndex - 1)"
-                                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                                       class="btn btn-default @prevDisabled">
-                                        Anterior
-                                    </a>
-                                    <a asp-action="TransmitidasProvincia"
-                                       asp-route-sortOrder="@ViewData["CurrentSort"]"
-                                       asp-route-pageNumber="@(Model.PageIndex + 1)"
-                                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                                       class="btn btn-default @nextDisabled">
-                                        Siguiente
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-@*<div>
+<div asp-validation-summary="All" class="text-danger"></div>
+@if (Model != null)
+{
+    <div class="form-group">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CODIGO)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PROVINCIA)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.JUNTAS)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TRANSMITIDAS)
+                    </th>
+                    @*<th></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CODIGO)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PROVINCIA)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JUNTAS)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TRANSMITIDAS)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Cantón", "TransmitidasCanton", new { codProvincia = item.CODIGO  }) @*|
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<div>
     <a asp-controller="Home" asp-action="Index">Regresar al Inicio | </a>
     <a asp-controller="Account" asp-action="Logout">Salir</a>
-</div>*@
+</div>

@@ -13,9 +13,5 @@ namespace CoreCRUDwithORACLE.Interfaces
         Task<IEnumerable<ATransmitidasProvincia>> TransmitidasProvincia(int? codigoProvincia = null);
         Task<IEnumerable<ATransmitidasCanton>> TransmitidasCanton(int? codigoProvincia = null);
         Task<IEnumerable<ATransmitidasParroquias>> TransmitidasParroquia(int? codigoCanton = null);
-        Task<IEnumerable<DetallesTransmitidas>> TransmitidasDetalle(int? codigoParroquia = null);
-        Task<IEnumerable<InformacionGeneral>> GeneralProvincia(int? codigoProvincia = null);
-        Task<IEnumerable<InformacionGeneral>> GeneralCanton(int? codigoProvincia = null);
-        Task<IEnumerable<InformacionGeneral>> GeneralParroquia(int? codigoCanton = null);
     }
 }

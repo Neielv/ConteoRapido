@@ -148,7 +148,7 @@ namespace CoreCRUDwithORACLE.Controllers
                 }
             }
 
-            ModelState.AddModelError(string.Empty, "Intento de ingreso inválido.");
+            ModelState.AddModelError(string.Empty, "Intento de ingreso inválido");
             return View();
         }
 

@@ -41,28 +41,27 @@
                                             asp-items="@(new SelectList(Model.provincias,"Value", "Text"))">
                                     </select>
                                 </div>
-                                @Html.HiddenFor(u => u.LOGEO)
-                                @*<div class="form-group">
-                                        <label asp-for="LOGEO" class="control-label"></label>
-                                         <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
-                                            </div>
-                                            <input asp-for="LOGEO" type="text" class="form-control" maxlength="10">
+                                <div class="form-group">
+                                    <label asp-for="LOGEO" class="control-label"></label>
+                                     <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
                                         </div>
+                                        <input asp-for="LOGEO" type="text" class="form-control" maxlength="10">
+                                    </div>
 
-                                        <span asp-validation-for="LOGEO" class="text-danger"></span>
-                                    </div>*@
+                                    <span asp-validation-for="LOGEO" class="text-danger"></span>
+                                </div>
                                 <div class="form-group">
                                     <label asp-for="CEDULAC" class="control-label"></label>
                                     <!--<input asp-for="CEDULAC" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'')" />-->
-
+                                    
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                            <span class="input-group-text"><i class="fas fa-credit-card" ></i></span>
                                         </div>
-                                        <input asp-for="CEDULAC" type="text" class="form-control" maxlength="10">
-                                    </div>
+                                        <input asp-for="CEDULAC" type="text" class="form-control" maxlength="10" >
+                                    </div>                                    
                                     <span asp-validation-for="CEDULAC" class="text-danger"></span>
                                 </div>
                                 @*<div class="form-group">
@@ -70,29 +69,29 @@
                                         <input asp-for="DIGITO" class="form-control" />
                                         <span asp-validation-for="DIGITO" class="text-danger"></span>
                                     </div>*@
-                                <div class="form-group">
-                                    <label asp-for="CLAVE" class="control-label"></label>
-                                    <!-- <input asp-for="CLAVE" class="form-control" />-->
+                            <div class="form-group">
+                                <label asp-for="CLAVE" class="control-label"></label>
+                                <!-- <input asp-for="CLAVE" class="form-control" />-->
 
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                        </div>
-                                        <input asp-for="CLAVE" type="text" class="form-control" maxlength="8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                     </div>
-                                    <span asp-validation-for="CLAVE" class="text-danger"></span>
+                                    <input asp-for="CLAVE" type="text" class="form-control" maxlength="8">
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="NOMBRE" class="control-label"></label>
-                                    <!--<input asp-for="NOMBRE" class="form-control" />-->
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-user-check"></i></span>
-                                        </div>
-                                        <input asp-for="NOMBRE" type="text" class="form-control" maxlength="30">
+                                <span asp-validation-for="CLAVE" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NOMBRE" class="control-label"></label>
+                                <!--<input asp-for="NOMBRE" class="form-control" />-->
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user-check"></i></span>
                                     </div>
-                                    <span asp-validation-for="NOMBRE" class="text-danger"></span>
+                                    <input asp-for="NOMBRE" type="text" class="form-control" maxlength="30">
                                 </div>
+                                <span asp-validation-for="NOMBRE" class="text-danger"></span>
+                            </div>
                                 @*<div class="form-group">
                                         <label asp-for="ROL" class="control-label"></label>
                                         <input asp-for="ROL" class="form-control" />
@@ -120,7 +119,7 @@
                                     <!--<input asp-for="MAIL" class="form-control" />-->
 
                                     <div class="input-group-prepend">
-                                        <input a asp-for="MAIL" type="email" class="form-control" placeholder="Email">
+                                        <input a asp-for="MAIL" type="email" class="form-control" placeholder="Email" >
                                         <div class="input-group-append">
                                             <div class="input-group-text">
                                                 <span class="fas fa-envelope"></span>
